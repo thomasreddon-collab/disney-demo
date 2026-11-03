@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disneyland Paris — Magie pour toute la famille</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── RESET & BASE ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Open Sans', Arial, sans-serif; color: #222; background: #fff; }
+    img { display: block; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── CONTAINER ── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+    /* ── UTILITY BAR ── */
+    .util-bar { background: #f4f4f4; border-bottom: 1px solid #e0e0e0; padding: 7px 0; font-size: 12px; color: #555; }
+    .util-bar__inner { display: flex; justify-content: space-between; align-items: center; }
+    .util-bar a { color: #555; transition: color .2s; }
+    .util-bar a:hover { color: #003087; }
+    .util-bar__right { display: flex; gap: 20px; align-items: center; }
+
+    /* ── HEADER ── */
+    .site-header { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.07); position: sticky; top: 0; z-index: 200; }
+    .header-inner { display: flex; align-items: center; height: 72px; gap: 0; }
+
+    /* Logo gradient officiel */
+    .header-logo { flex-shrink: 0; margin-right: 28px; display: flex; align-items: center; }
+    .header-logo img { height: 52px; width: auto; }
+
+    .header-nav { display: flex; align-items: center; gap: 0; flex: 1; }
+    .header-nav a { font-size: 13px; font-weight: 600; color: #222; padding: 0 13px; height: 72px; display: flex; align-items: center; border-bottom: 3px solid transparent; transition: all .2s; white-space: nowrap; }
+    .header-nav a:hover { color: #003087; border-bottom-color: #003087; }
+    .header-nav a.active { color: #003087; border-bottom-color: #003087; }
+    .header-ctas { display: flex; gap: 8px; align-items: center; margin-left: auto; flex-shrink: 0; }
+
+    /* BUTTONS — bleus arrondis style officiel */
+    .btn-blue { background: #003087; color: #fff; border: none; border-radius: 24px; padding: 10px 22px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: background .2s; display: inline-block; font-family: inherit; }
+    .btn-blue:hover { background: #00247a; }
+    .btn-blue-lg { background: #003087; color: #fff; border: none; border-radius: 24px; padding: 14px 30px; font-size: 15px; font-weight: 700; cursor: pointer; display: inline-block; transition: background .2s; font-family: inherit; }
+    .btn-blue-lg:hover { background: #00247a; }
+    .btn-blue-outline { background: transparent; color: #003087; border: 2px solid #003087; border-radius: 24px; padding: 10px 22px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all .2s; display: inline-block; font-family: inherit; }
+    .btn-blue-outline:hover { background: #003087; color: #fff; }
+    .btn-white-outline { background: transparent; color: #fff; border: 2px solid #fff; border-radius: 24px; padding: 12px 26px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all .2s; display: inline-block; font-family: inherit; }
+    .btn-white-outline:hover { background: rgba(255,255,255,0.15); }
+    /* Garder compatibilité avec btn-primary dans le JS/autres pages */
+    .btn-primary { background: #003087; color: #fff; border: none; border-radius: 24px; padding: 10px 22px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: background .2s; display: inline-block; font-family: inherit; }
+    .btn-primary:hover { background: #00247a; }
+    .btn-primary-lg { background: #003087; color: #fff; border: none; border-radius: 24px; padding: 14px 30px; font-size: 15px; font-weight: 700; cursor: pointer; display: inline-block; transition: background .2s; font-family: inherit; }
+    .btn-primary-lg:hover { background: #00247a; }
+
+    /* ── HERO ── */
+    .hero { position: relative; background: #fff; overflow: visible; display: block !important; width: 100%; min-height: 0 !important; }
+    .hero__bg { position: relative; overflow: hidden; }
+    .hero__bg img { width: 100%; height: 640px; object-fit: cover; object-position: center 25%; display: block; }
+    /* Overlay léger pour assombrir légèrement sans masquer l'image */
+    .hero__overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,10,40,0.08) 0%, rgba(0,10,40,0.15) 60%, rgba(0,10,40,0.38) 100%); }
+    /* Vague blanche en bas du hero — SVG clip similaire au site officiel */
+    .hero__wave {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      width: 100%;
+      overflow: hidden;
+      line-height: 0;
+    }
+    .hero__wave svg { display: block; width: 100%; height: 140px; }
+    /* Contenu hero : positionné en haut à gauche, petit bloc discret */
+    .hero__content {
+      position: absolute;
+      top: 32px;
+      left: 0;
+      right: 0;
+      z-index: 2;
+    }
+    .hero__text-block {
+      padding: 0 40px;
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .hero__perso-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,215,0,0.2); border: 1px solid rgba(255,215,0,0.6); color: #FFD700; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 10px; letter-spacing: 0.5px; text-transform: uppercase; }
+    .hero__title { font-family: 'Nunito', sans-serif; font-size: clamp(28px, 3.2vw, 48px); font-weight: 700; color: #fff; line-height: 1.15; margin-bottom: 14px; text-shadow: 0 2px 8px rgba(0,0,0,0.55); }
+    .hero__subtitle { font-size: 20px; font-weight: 700; color: rgba(255,255,255,0.92); margin-bottom: 24px; text-shadow: 0 1px 4px rgba(0,0,0,0.4); }
+    .hero__btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .btn-hero { display: inline-block; background: #fff; color: #003087; font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800; padding: 14px 32px; border-radius: 30px; text-decoration: none; box-shadow: 0 4px 16px rgba(0,0,0,0.25); transition: transform .15s, box-shadow .15s; }
+    .btn-hero:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+
+    /* ── BOOKING SECTION — flottant sur le hero ── */
+    .booking-section { background: transparent; padding: 0; position: relative; z-index: 10; margin-top: -90px; }
+    .booking-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 20px 32px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.15);
+    }
+
+    /* Onglets booking — centrés */
+    .booking-tabs { display: flex; justify-content: center; border-bottom: 2px solid #e5e7eb; margin-bottom: 16px; padding-top: 20px; }
+    .booking-tab { background: transparent; border: none; color: #666; font-size: 14px; font-weight: 600; padding: 10px 24px; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; font-family: inherit; transition: all .2s; display: flex; align-items: center; gap: 6px; }
+    .booking-tab.active { color: #003087; border-bottom-color: #003087; }
+    .booking-tab:hover:not(.active) { color: #003087; }
+
+    /* Formulaire booking — 1 ligne compacte */
+    .booking-form {
+      display: flex;
+      align-items: stretch;
+      background: #fff;
+      border: 1.5px solid #d1d5db;
+      border-radius: 50px;
+      overflow: hidden;
+      padding: 0;
+      gap: 0;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    /* Champ "Sélectionnez vos dates" (groupe dates) */
+    .booking-field-group {
+      display: flex;
+      flex: 1.4;
+      border-right: 1.5px solid #e5e7eb;
+      position: relative;
+    }
+    .booking-field {
+      flex: 1;
+      padding: 12px 16px;
+      border-right: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+    }
+    .booking-field:last-child { border-right: none; }
+    .booking-field--single {
+      flex: 1;
+      padding: 12px 20px;
+      border-right: 1.5px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+    }
+    .booking-field--last {
+      flex: 1;
+      padding: 12px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+    }
+    .booking-label {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      color: #003087;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 3px;
+      white-space: nowrap;
+    }
+    .booking-input {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #222;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .booking-input svg { color: #888; flex-shrink: 0; }
+    .booking-submit {
+      background: #003087;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 14px 28px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin: 6px 6px 6px 0;
+      white-space: nowrap;
+      transition: background .2s;
+      font-family: inherit;
+      flex-shrink: 0;
+    }
+    .booking-submit:hover { background: #00247a; }
+    .booking-hint { color: #888; font-size: 12px; padding: 10px 4px 0; text-align: center; }
+    .booking-hint a { color: #003087; text-decoration: underline; }
+    .booking-form-wrap { padding: 0 24px; }
+
+    /* ── PROMO BANNER ── */
+    .promo-banner { background: #EBF2FF; border-top: 1px solid #c7d9f5; border-bottom: 1px solid #c7d9f5; padding: 12px 0; }
+    .promo-banner__inner { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .promo-banner__badge { background: #003087; color: #fff; font-size: 12px; font-weight: 700; padding: 3px 12px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .promo-banner__text { color: #003087; font-size: 14px; font-weight: 600; }
+    .promo-banner__cta { color: #003087; font-size: 14px; font-weight: 700; text-decoration: underline; }
+
+    /* ── SECTION TITLES ── */
+    .section-pad { padding: 56px 0; }
+    .section-pad--sm { padding: 40px 0; }
+    .sec-eyebrow { font-size: 12px; font-weight: 700; color: #003087; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .sec-title { font-family: 'Nunito', sans-serif; font-size: clamp(20px, 2.5vw, 30px); font-weight: 900; color: #111; margin-bottom: 10px; }
+    .sec-title--white { color: #fff; }
+    .sec-body { font-size: 15px; color: #555; line-height: 1.6; max-width: 680px; }
+    .sec-body--white { color: rgba(255,255,255,0.85); }
+    .sec-header { margin-bottom: 28px; }
+    .sec-header--between { display: flex; justify-content: space-between; align-items: flex-end; }
+
+    /* Section divider léger */
+    .sec-divider { border: none; border-top: 1px solid #e5e7eb; margin: 0; }
+
+    /* ── CARDS ── */
+    .cards-grid { display: grid; gap: 20px; }
+    .cards-grid--3 { grid-template-columns: repeat(3, 1fr); }
+    .cards-grid--2 { grid-template-columns: repeat(2, 1fr); }
+    .cards-grid--4 { grid-template-columns: repeat(4, 1fr); }
+    .card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.07); transition: transform .25s, box-shadow .25s; border: 1px solid #f0f0f0; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(0,0,0,0.12); }
+    .card__img-wrap { position: relative; overflow: hidden; background: #e5e7eb; }
+    .card__img-wrap--tall { height: 220px; }
+    .card__img-wrap--mid { height: 190px; }
+    .card__img-wrap--short { height: 150px; }
+    .card__img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s; }
+    .card:hover .card__img { transform: scale(1.04); }
+    .card__tag { position: absolute; top: 12px; left: 12px; background: #003087; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .card__tag--green { background: #059669; }
+    .card__body { padding: 18px; }
+    .card__cat { font-size: 11px; font-weight: 700; color: #003087; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .card__title { font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800; color: #111; margin-bottom: 8px; line-height: 1.3; }
+    .card__text { font-size: 13px; color: #555; line-height: 1.5; margin-bottom: 14px; }
+    .card__upsell { background: #FFF8E1; border: 1px solid #FFE082; border-radius: 6px; padding: 7px 10px; font-size: 12px; color: #7a5000; display: flex; align-items: center; gap: 6px; margin-bottom: 14px; }
+    .card__price { font-size: 20px; font-weight: 900; color: #003087; margin-bottom: 12px; }
+    .card__price small { font-size: 12px; font-weight: 400; color: #777; }
+    .card__link { color: #003087; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
+    .card__link:hover { text-decoration: underline; }
+
+    /* ── HOTEL CARDS ── */
+    .hotels-list { display: flex; flex-direction: column; gap: 16px; }
+    .hotel-card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.07); display: flex; transition: box-shadow .25s; border: 1px solid #f0f0f0; }
+    .hotel-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.12); }
+    .hotel-card__img { width: 260px; flex-shrink: 0; overflow: hidden; background: #e5e7eb; }
+    .hotel-card__img img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s; }
+    .hotel-card:hover .hotel-card__img img { transform: scale(1.04); }
+    .hotel-card__body { flex: 1; padding: 22px; display: flex; gap: 20px; align-items: flex-start; }
+    .hotel-card__info { flex: 1; }
+    .hotel-card__stars { color: #FFB800; font-size: 14px; margin-bottom: 4px; }
+    .hotel-card__title { font-family: 'Nunito', sans-serif; font-size: 17px; font-weight: 800; color: #111; margin-bottom: 5px; }
+    .hotel-card__location { font-size: 13px; color: #777; margin-bottom: 8px; }
+    .hotel-card__text { font-size: 13px; color: #555; line-height: 1.5; margin-bottom: 12px; }
+    .hotel-card__badge { display: inline-flex; align-items: center; gap: 6px; background: #FFF8E1; border: 1px solid #FFE082; border-radius: 6px; padding: 5px 10px; font-size: 12px; color: #7a5000; margin-bottom: 12px; }
+    .hotel-card__pricing { text-align: right; flex-shrink: 0; min-width: 130px; }
+    .hotel-card__from { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+    .hotel-card__price { font-size: 26px; font-weight: 900; color: #003087; }
+    .hotel-card__per { font-size: 12px; color: #888; margin-bottom: 12px; }
+
+    /* ── UNIVERS CIRCLES ── */
+    .univers-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 16px; }
+    .univ-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+    .univ-item:hover .univ-circle { transform: scale(1.06); box-shadow: 0 4px 16px rgba(0,48,135,0.2); }
+    .univ-circle { width: 100px; height: 100px; border-radius: 50%; overflow: hidden; background: #e5e7eb; transition: transform .25s, box-shadow .25s; border: 3px solid #f0f0f0; }
+    .univ-circle img { width: 100%; height: 100%; object-fit: cover; }
+    .univ-label { font-size: 12px; font-weight: 600; color: #333; text-align: center; line-height: 1.3; }
+
+    /* ── SEASONS TABS ── */
+    .seasons-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+    .season-tab { border: 1.5px solid #d1d5db; border-radius: 24px; padding: 7px 18px; font-size: 13px; font-weight: 600; color: #555; cursor: pointer; background: transparent; transition: all .2s; font-family: inherit; }
+    .season-tab.active { background: #003087; color: #fff; border-color: #003087; }
+    .season-tab:hover:not(.active) { border-color: #003087; color: #003087; }
+
+    /* ── DISNEYLAND PASS BANNER ── */
+    .pass-banner { background: linear-gradient(135deg, #003087 0%, #1565C0 100%); padding: 60px 0; }
+    .pass-banner__inner { display: flex; align-items: center; gap: 48px; }
+    .pass-banner__img { flex: 1; border-radius: 12px; overflow: hidden; max-width: 480px; }
+    .pass-banner__img img { width: 100%; height: 260px; object-fit: cover; }
+
+    /* ── REASSURANCE (fond blanc) ── */
+    .reassurance-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; }
+    .reassurance-item { text-align: center; padding: 24px 12px; }
+    .reassurance-icon { font-size: 32px; margin-bottom: 12px; }
+    .reassurance-title { font-size: 14px; font-weight: 700; color: #111; margin-bottom: 6px; }
+    .reassurance-text { font-size: 13px; color: #666; line-height: 1.5; }
+
+    /* ── PERSO SECTION ── */
+    .section-perso { background: linear-gradient(135deg, #003087 0%, #1565C0 100%); }
+    .perso-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,215,0,0.2); border: 1px solid rgba(255,215,0,0.5); color: #FFD700; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* ── NEWSLETTER ── */
+    .newsletter-block { background: #EBF2FF; border-radius: 16px; padding: 40px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+    .newsletter-block__badge { display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: #003087; border-radius: 50%; font-size: 26px; margin-bottom: 14px; }
+    .newsletter-block__title { font-family: 'Nunito', sans-serif; font-size: 20px; font-weight: 800; color: #111; margin-bottom: 6px; }
+    .newsletter-block__text { font-size: 14px; color: #555; }
+    .newsletter-block__form { display: flex; gap: 10px; min-width: 360px; }
+    .newsletter-input { flex: 1; border: 1.5px solid #c7d9f5; border-radius: 24px; padding: 12px 18px; font-size: 14px; font-family: inherit; background: #fff; }
+    .newsletter-input:focus { outline: none; border-color: #003087; }
+
+    /* ── FOOTER (blanc) ── */
+    .footer { background: #fff; border-top: 1px solid #e5e7eb; color: #555; padding: 48px 0 24px; }
+    .footer-top { display: flex; gap: 40px; margin-bottom: 40px; }
+    .footer-col { flex: 1; }
+    .footer-col-title { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a { font-size: 13px; color: #555; transition: color .2s; }
+    .footer-links a:hover { color: #003087; }
+    .footer-divider { border: none; border-top: 1px solid #e5e7eb; margin: 0 0 24px; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; }
+    .footer-copyright { font-size: 12px; color: #999; }
+    .footer-social { display: flex; gap: 12px; }
+    .footer-social a { width: 34px; height: 34px; border-radius: 50%; border: 1px solid #e0e0e0; display: flex; align-items: center; justify-content: center; color: #555; font-size: 14px; transition: all .2s; }
+    .footer-social a:hover { background: #003087; color: #fff; border-color: #003087; }
+    .footer-logo-bottom { margin-bottom: 24px; }
+    .footer-logo-bottom img { height: 40px; width: auto; }
+
+    /* ── DC PANEL ── */
+    .dc-panel { position: fixed; top: 0; right: -340px; width: 320px; height: 100vh; background: #0f172a; color: #e2e8f0; z-index: 1000; overflow-y: auto; transition: right .35s cubic-bezier(.4,0,.2,1); box-shadow: -4px 0 20px rgba(0,0,0,0.3); }
+    .dc-panel.open { right: 0; }
+    .dc-panel__header { background: #1e293b; padding: 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 1; }
+    .dc-panel__logo { display: flex; align-items: center; gap: 8px; }
+    .dc-panel__logo-mark { width: 28px; height: 28px; background: linear-gradient(135deg, #0070D2, #1589EE); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 900; }
+    .dc-panel__logo-text { font-size: 13px; font-weight: 700; color: #94a3b8; }
+    .dc-panel__logo-title { font-size: 11px; color: #64748b; }
+    .dc-panel__close { background: none; border: none; color: #64748b; cursor: pointer; font-size: 18px; padding: 4px; }
+    .dc-panel__close:hover { color: #e2e8f0; }
+    .dc-body { padding: 16px; }
+    .dc-status { display: flex; align-items: center; gap: 8px; background: #1e293b; border-radius: 6px; padding: 10px 14px; margin-bottom: 16px; }
+    .dc-status__dot { width: 8px; height: 8px; border-radius: 50%; background: #64748b; flex-shrink: 0; }
+    .dc-status__dot--live { background: #10b981; box-shadow: 0 0 6px #10b981; animation: pulse-dot 1.5s infinite; }
+    .dc-status__label { font-size: 13px; font-weight: 600; color: #e2e8f0; }
+    @keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+    .dc-section { margin-bottom: 20px; }
+    .dc-section-title { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+    .dc-field { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #1e293b; gap: 8px; }
+    .dc-field:last-child { border-bottom: none; }
+    .dc-field__key { font-size: 12px; color: #94a3b8; flex-shrink: 0; }
+    .dc-field__val { font-size: 12px; font-weight: 600; color: #e2e8f0; text-align: right; }
+    .dc-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 10px; }
+    .dc-badge--blue { background: rgba(59,130,246,0.2); color: #93c5fd; }
+    .dc-badge--green { background: rgba(16,185,129,0.2); color: #6ee7b7; }
+    .dc-badge--orange { background: rgba(245,158,11,0.2); color: #fcd34d; }
+    .dc-badge--grey { background: rgba(100,116,139,0.2); color: #94a3b8; }
+    .dc-signal-list { display: flex; flex-direction: column; gap: 6px; }
+    .dc-signal { font-size: 11px; padding: 6px 10px; background: #1e293b; border-radius: 4px; color: #94a3b8; border-left: 3px solid #3b82f6; }
+    .dc-reconciliation { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 6px; padding: 12px; margin-bottom: 16px; display: none; }
+    .dc-reconciliation.visible { display: block; }
+    .dc-reconciliation__title { font-size: 12px; font-weight: 700; color: #6ee7b7; margin-bottom: 8px; }
+    .dc-reconciliation__arrow { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #94a3b8; flex-wrap: wrap; }
+
+    /* ── DC TOGGLE ── */
+    .dc-toggle { position: fixed; top: 50%; right: 0; transform: translateY(-50%); background: #0070D2; color: #fff; border: none; border-radius: 6px 0 0 6px; padding: 12px 8px; cursor: pointer; z-index: 999; writing-mode: vertical-rl; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; transition: background .2s; }
+    .dc-toggle:hover { background: #005fb2; }
+
+    /* ── CHAT WIDGET ── */
+    .chat-widget { position: fixed; bottom: 24px; right: 24px; z-index: 998; }
+    .chat-trigger { width: 60px; height: 60px; border-radius: 50%; background: #003087; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 26px; box-shadow: 0 4px 16px rgba(0,48,135,0.4); transition: transform .2s, box-shadow .2s; position: relative; }
+    .chat-trigger:hover { transform: scale(1.08); box-shadow: 0 6px 22px rgba(0,48,135,0.5); }
+    .chat-badge { display: none; }
+    .chat-bubble { position: absolute; bottom: 68px; right: 0; background: #fff; color: #003087; font-size: 12px; font-weight: 700; padding: 8px 12px; border-radius: 12px 12px 2px 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.18); white-space: nowrap; pointer-events: none; border: 1.5px solid #e5e7eb; }
+    .chat-bubble::after { content: ''; position: absolute; bottom: -8px; right: 14px; border: 6px solid transparent; border-top-color: #fff; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1)); }
+    .chat-window { position: absolute; bottom: 72px; right: 0; width: 360px; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.18); overflow: hidden; display: none; }
+    .chat-window.open { display: flex; flex-direction: column; }
+    .chat-header { background: #003087; padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
+    .chat-header__avatar { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .chat-header__name { font-size: 14px; font-weight: 700; color: #fff; }
+    .chat-header__status { font-size: 11px; color: rgba(255,255,255,0.7); display: flex; align-items: center; gap: 4px; }
+    .chat-header__status::before { content: ''; display: inline-block; width: 7px; height: 7px; background: #4ade80; border-radius: 50%; }
+    .chat-header__close { margin-left: auto; background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 18px; padding: 2px; }
+    .chat-header__close:hover { color: #fff; }
+    .chat-messages { padding: 16px; flex: 1; overflow-y: auto; max-height: 340px; display: flex; flex-direction: column; gap: 12px; background: #f9fafb; }
+    .chat-msg { max-width: 88%; }
+    .chat-msg--bot { align-self: flex-start; }
+    .chat-msg--user { align-self: flex-end; }
+    .chat-msg__bubble { padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.5; }
+    .chat-msg--bot .chat-msg__bubble { background: #fff; color: #222; border: 1px solid #e5e7eb; border-bottom-left-radius: 2px; }
+    .chat-msg--user .chat-msg__bubble { background: #003087; color: #fff; border-bottom-right-radius: 2px; }
+    .chat-followups { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .chat-followup { border: 1.5px solid #003087; border-radius: 16px; background: transparent; color: #003087; font-size: 12px; font-weight: 600; padding: 5px 12px; cursor: pointer; transition: all .2s; font-family: inherit; }
+    .chat-followup:hover { background: #003087; color: #fff; }
+    .chat-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; margin-top: 6px; max-width: 280px; }
+    .chat-card__img { height: 100px; background: #e5e7eb; overflow: hidden; }
+    .chat-card__img img { width: 100%; height: 100%; object-fit: cover; }
+    .chat-card__body { padding: 10px 12px; }
+    .chat-card__tag { font-size: 10px; font-weight: 700; color: #003087; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .chat-card__title { font-size: 13px; font-weight: 700; color: #111; margin-bottom: 4px; }
+    .chat-card__price { font-size: 12px; color: #003087; font-weight: 700; margin-bottom: 8px; }
+    .chat-card__cta { display: block; text-align: center; background: #003087; color: #fff; font-size: 12px; font-weight: 700; padding: 7px; border-radius: 8px; }
+    .chat-input-area { display: flex; border-top: 1px solid #e5e7eb; }
+    .chat-input { flex: 1; border: none; padding: 12px 14px; font-size: 14px; font-family: inherit; outline: none; }
+    .chat-send { background: #003087; border: none; color: #fff; padding: 12px 16px; cursor: pointer; transition: background .2s; }
+    .chat-send:hover { background: #00247a; }
+    .chat-disclaimer { font-size: 11px; color: #9ca3af; text-align: center; padding: 8px; border-top: 1px solid #f3f4f6; background: #fafafa; }
+    .whatsapp-opt { background: #e7f7ee; border: 1px solid #a7f3d0; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+    .whatsapp-opt__text { font-size: 13px; color: #065f46; display: flex; align-items: center; gap: 8px; }
+    .whatsapp-opt__btns { display: flex; gap: 8px; }
+    .whatsapp-btn-yes { background: #25D366; color: #fff; border: none; border-radius: 4px; padding: 7px 16px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
+    .whatsapp-btn-no { background: transparent; color: #4b5563; border: 1px solid #d1d5db; border-radius: 4px; padding: 7px 14px; font-size: 12px; cursor: pointer; font-family: inherit; }
+
+    /* ── RECONCILIATION TOAST ── */
+    .recon-toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px); background: #003087; color: #fff; border-radius: 10px; padding: 14px 24px; display: none; align-items: center; gap: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); z-index: 990; min-width: 320px; }
+    .recon-toast.show { display: flex; animation: slideDown .4s ease forwards; }
+    @keyframes slideDown { from { opacity: 0; transform: translateX(-50%) translateY(-20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+    .recon-toast__icon { font-size: 22px; flex-shrink: 0; }
+    .recon-toast__text strong { display: block; font-size: 14px; margin-bottom: 2px; }
+    .recon-toast__text span { font-size: 12px; color: rgba(255,255,255,0.75); }
+
+    /* ── EXIT INTENT MODAL ── */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1100; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: #fff; border-radius: 16px; padding: 40px; max-width: 440px; width: 90%; position: relative; text-align: center; }
+    .modal__close { position: absolute; top: 14px; right: 14px; background: none; border: none; font-size: 20px; color: #9ca3af; cursor: pointer; }
+    .modal__logo { height: 56px; width: auto; margin-bottom: 16px; display: block; margin-left: auto; margin-right: auto; }
+    .modal__title { font-family: 'Nunito', sans-serif; font-size: 22px; font-weight: 900; color: #111; margin-bottom: 8px; }
+    .modal__text { font-size: 15px; color: #555; margin-bottom: 20px; }
+    .modal__offer { display: flex; align-items: center; justify-content: center; gap: 14px; background: #003087; border-radius: 10px; padding: 14px 20px; margin-bottom: 24px; }
+    .modal__offer-badge { background: #FFD700; color: #003087; font-size: 22px; font-weight: 900; padding: 6px 16px; border-radius: 8px; white-space: nowrap; }
+    .modal__offer-text { font-size: 15px; font-weight: 600; color: #fff; }
+    .modal__form { display: flex; flex-direction: column; gap: 12px; }
+    .modal__input { border: 1.5px solid #d1d5db; border-radius: 24px; padding: 12px 18px; font-size: 14px; font-family: inherit; }
+    .modal__input:focus { outline: none; border-color: #003087; }
+    .modal__legal { font-size: 11px; color: #9ca3af; margin-top: 8px; }
+
+    /* ── SECTION HIGHLIGHT ── */
+    .section--highlight { box-shadow: 0 0 0 4px #FFD700, 0 0 30px rgba(255,215,0,0.3) !important; animation: glowPulse 1.8s ease-in-out; border-radius: 12px; }
+    @keyframes glowPulse { 0% { box-shadow: 0 0 0 0 rgba(255,215,0,0.6); } 50% { box-shadow: 0 0 0 6px rgba(255,215,0,0.3), 0 0 30px rgba(255,215,0,0.4); } 100% { box-shadow: 0 0 0 4px #FFD700, 0 0 30px rgba(255,215,0,0.3); } }
+
+    /* ── DC SIGNAL TOAST ── */
+    .dc-signal-toast { animation: slideInRight .4s ease; border-left-color: #10b981 !important; }
+    @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+    /* ── MISC ── */
+    .tag-new { background: #003087; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
+    .tag-incl { background: #059669; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
+    .divider { border: none; border-top: 1px solid #e5e7eb; margin: 0; }
+
+    /* ── "PLANIFIEZ" SECTION ── */
+    .planif-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .planif-card { border-radius: 12px; overflow: hidden; position: relative; cursor: pointer; }
+    .planif-card img { width: 100%; height: 160px; object-fit: cover; display: block; }
+    .planif-card__overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 60%); }
+    .planif-card__text { position: absolute; bottom: 16px; left: 16px; right: 16px; }
+    .planif-card__title { color: #fff; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+    .planif-card__sub { color: rgba(255,255,255,0.85); font-size: 12px; }
+
+    @media (max-width: 900px) {
+      .cards-grid--3 { grid-template-columns: 1fr 1fr; }
+      .cards-grid--4 { grid-template-columns: 1fr 1fr; }
+      .univers-grid { grid-template-columns: repeat(4, 1fr); }
+      .reassurance-grid { grid-template-columns: repeat(3, 1fr); }
+      .hotel-card { flex-direction: column; }
+      .hotel-card__img { width: 100%; height: 200px; }
+      .booking-form { flex-direction: column; }
+      .pass-banner__inner { flex-direction: column; }
+      .planif-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== DATA CLOUD PANEL ===== -->
+<div id="dc-panel" class="dc-panel">
+  <div class="dc-panel__header">
+    <div class="dc-panel__logo">
+      <div class="dc-panel__logo-mark">SF</div>
+      <div>
+        <div class="dc-panel__logo-text">Agentforce Marketing</div>
+        <div class="dc-panel__logo-title">Data 360 — Profil temps réel</div>
+      </div>
+    </div>
+    <button class="dc-panel__close" onclick="toggleDCPanel()">✕</button>
+  </div>
+  <div class="dc-body">
+    <div class="dc-status" id="dc-status">
+      <div class="dc-status__dot" id="dc-status-dot"></div>
+      <span class="dc-status__label" id="dc-status-label">Visiteur anonyme</span>
+    </div>
+
+    <div class="dc-reconciliation" id="dc-reconciliation-section">
+      <div class="dc-reconciliation__title">⚡ Réconciliation profil</div>
+      <div class="dc-reconciliation__arrow">
+        <span class="dc-badge dc-badge--grey">anon_8f3a2d91</span>
+        <span style="color:#64748b;margin:0 4px;">→</span>
+        <span class="dc-badge dc-badge--green" id="dc-known-id">sophie.martin@email.fr</span>
+      </div>
+    </div>
+
+    <div class="dc-section">
+      <div class="dc-section-title">Identité</div>
+      <div class="dc-field">
+        <span class="dc-field__key">ID Visiteur</span>
+        <span class="dc-field__val" id="dc-visitor-id" style="font-family:monospace;font-size:11px;">anon_8f3a2d91</span>
+      </div>
+      <div class="dc-field" id="dc-field-name" style="display:none;">
+        <span class="dc-field__key">Prénom</span>
+        <span class="dc-field__val" id="dc-name">—</span>
+      </div>
+      <div class="dc-field" id="dc-field-email" style="display:none;">
+        <span class="dc-field__key">Email</span>
+        <span class="dc-field__val" id="dc-email" style="font-family:monospace;font-size:11px;">—</span>
+      </div>
+    </div>
+
+    <div class="dc-section">
+      <div class="dc-section-title">Segment &amp; Acquisition</div>
+      <div class="dc-field">
+        <span class="dc-field__key">Source</span>
+        <span class="dc-field__val">Instagram Ads</span>
+      </div>
+      <div class="dc-field">
+        <span class="dc-field__key">Segment actif</span>
+        <span class="dc-field__val"><span class="dc-badge dc-badge--blue" id="dc-segment">Familles IDF — 47k</span></span>
+      </div>
+      <div class="dc-field" id="dc-field-propensity" style="display:none;">
+        <span class="dc-field__key">Propension Pass Annuel</span>
+        <span class="dc-field__val"><span class="dc-badge dc-badge--green">87 %</span></span>
+      </div>
+    </div>
+
+    <div class="dc-section">
+      <div class="dc-section-title">Comportement session</div>
+      <div class="dc-field">
+        <span class="dc-field__key">Page actuelle</span>
+        <span class="dc-field__val" id="dc-page">Accueil</span>
+      </div>
+      <div class="dc-field">
+        <span class="dc-field__key">Intérêt détecté</span>
+        <span class="dc-field__val"><span class="dc-badge dc-badge--orange" id="dc-interest">Hébergement famille</span></span>
+      </div>
+      <div class="dc-field">
+        <span class="dc-field__key">Durée session</span>
+        <span class="dc-field__val" id="dc-duration">0:00</span>
+      </div>
+    </div>
+
+    <div class="dc-section">
+      <div class="dc-section-title">Signaux comportementaux</div>
+      <div class="dc-signal-list" id="dc-signal-list">
+        <div class="dc-signal">Arrivée depuis Instagram Ads · Lookalike famille</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DC Toggle -->
+<button class="dc-toggle" onclick="toggleDCPanel()">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+  Connaissance client
+</button>
+
+<!-- ===== UTILITY BAR ===== -->
+<div class="util-bar">
+  <div class="container">
+    <div class="util-bar__inner">
+      <a href="#">Horaires des Parcs</a>
+      <div class="util-bar__right">
+        <a href="#">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Rechercher
+        </a>
+        <a href="#" id="header-account-link">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg><span id="header-account-label">Me connecter</span>
+        </a>
+        <a href="#">FR 🇫🇷</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HEADER ===== -->
+<header class="site-header" id="site-header">
+  <div class="container">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo"><img src="assets/logo.jpg" height="52" alt="Disneyland Paris"></a>
+
+      <nav class="header-nav">
+        <a href="#" class="active">Nos 2 Parcs</a>
+        <a href="hotels.html">Hébergement</a>
+        <a href="#">Restauration</a>
+        <a href="coupe-file.html">Coupe-file</a>
+        <a href="#">Réserver</a>
+        <a href="#">Préparer votre visite</a>
+      </nav>
+      <div class="header-ctas">
+        <a href="#" class="btn-blue-outline">Billets</a>
+        <a href="#" class="btn-blue">Hôtel + Billets</a>
+        <a href="cart.html" class="btn-cart"><span class="btn-cart__icon">🛒</span> Mon panier</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="hero">
+  <div class="hero__bg">
+    <img src="assets/hero-noel-default.jpg" alt="Noël Enchanté Disneyland Paris" id="hero-img" onerror="this.src='assets/hero-noel.jpg'">
+    <div class="hero__overlay"></div>
+    <div class="hero__wave">
+      <svg viewBox="0 0 1440 140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path d="M0,20 C480,140 960,140 1440,20 L1440,140 L0,140 Z" fill="#ffffff"/>
+      </svg>
+    </div>
+  </div>
+  <div class="hero__content">
+    <div class="hero__text-block">
+      <h1 class="hero__title" id="hero-title">Vous cherchez un hôtel&nbsp;?</h1>
+      <p class="hero__subtitle" id="hero-subtitle">Retrouvez notre sélection</p>
+      <div class="hero__btns" id="hero-btns-wrap">
+        <a href="hotels.html" class="btn-hero">Poursuivre ma recherche</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BOOKING WIDGET (sous le hero, sur fond blanc) ===== -->
+<div class="booking-section">
+  <div class="booking-wrap" id="booking">
+    <div class="booking-tabs">
+      <button class="booking-tab active" onclick="switchTab('hotel')">Hôtel + Billets</button>
+      <button class="booking-tab" onclick="switchTab('billets')">Billets &amp; Pass</button>
+    </div>
+    <div class="booking-form-wrap">
+    <div class="booking-form">
+      <!-- Groupe dates (Arrivée + Départ groupés) -->
+      <div class="booking-field-group">
+        <div class="booking-field">
+          <span class="booking-label">Arrivée</span>
+          <div class="booking-input">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <input type="date" id="booking-date-start" value="2026-12-22" style="border:none;outline:none;font-size:13px;font-weight:600;color:#222;font-family:inherit;cursor:pointer;min-width:0;width:100%;background:transparent;">
+          </div>
+        </div>
+        <div class="booking-field" style="border-right:none;">
+          <span class="booking-label">Départ</span>
+          <div class="booking-input">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <input type="date" id="booking-date-end" value="2026-12-24" style="border:none;outline:none;font-size:13px;font-weight:600;color:#222;font-family:inherit;cursor:pointer;min-width:0;width:100%;background:transparent;">
+          </div>
+        </div>
+      </div>
+      <!-- Hôtels et Resorts -->
+      <div class="booking-field--single">
+        <span class="booking-label">Hôtels et Resorts</span>
+        <div class="booking-input">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <select id="booking-hotel-value" style="border:none;outline:none;font-size:13px;font-weight:600;color:#222;font-family:inherit;cursor:pointer;background:transparent;min-width:0;width:100%;">
+            <option value="">Tous les hôtels</option>
+            <option value="disneyland-hotel">Disneyland Hotel ★★★★★</option>
+            <option value="marvel">Disney Hotel New York — Marvel ★★★★</option>
+            <option value="sequoia">Disney's Sequoia Lodge ★★★★</option>
+            <option value="newport">Disney Newport Bay Club ★★★★</option>
+            <option value="cheyenne">Disney's Hotel Cheyenne ★★★</option>
+            <option value="santa-fe">Disney's Hotel Santa Fe ★★★</option>
+          </select>
+        </div>
+      </div>
+      <!-- Chambres et visiteurs -->
+      <div class="booking-field--last">
+        <span class="booking-label">Chambres et visiteurs</span>
+        <div class="booking-input">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+          <select style="border:none;outline:none;font-size:13px;font-weight:600;color:#222;font-family:inherit;cursor:pointer;background:transparent;min-width:0;width:100%;">
+            <option>1 chambre / 2 visiteurs</option>
+            <option>1 chambre / 1 visiteur</option>
+            <option>1 chambre / 3 visiteurs</option>
+            <option>1 chambre / 4 visiteurs</option>
+            <option>2 chambres / 4 visiteurs</option>
+            <option>2 chambres / 6 visiteurs</option>
+          </select>
+        </div>
+      </div>
+      <button class="booking-submit">Réserver</button>
+    </div>
+    <p class="booking-hint">Vous cherchez la date idéale&nbsp;? <a href="#">Comparez les prix ↗</a></p>
+    </div><!-- /booking-form-wrap -->
+  </div>
+</div>
+
+<!-- ===== PROMO BANNER ===== -->
+<div class="promo-banner">
+  <div class="container">
+    <div class="promo-banner__inner">
+      <span class="promo-banner__badge">Offre spéciale</span>
+      <span class="promo-banner__text">Noël Enchanté 2026 — Réservez avant le 30 nov. et économisez jusqu'à <strong>15%</strong> sur votre séjour</span>
+      <a href="#" class="promo-banner__cta">En profiter →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== EN CE MOMENT ===== -->
+<section class="section-pad" id="en-ce-moment" style="background:#fff;">
+  <div class="container">
+    <div class="sec-header sec-header--between">
+      <div>
+        <p class="sec-eyebrow">À la une</p>
+        <h2 class="sec-title">En ce moment à Disneyland Paris</h2>
+      </div>
+      <a href="#" class="btn-blue-outline" style="font-size:13px;">Voir tout le programme</a>
+    </div>
+    <div class="cards-grid cards-grid--3">
+
+      <div class="card">
+        <div class="card__img-wrap card__img-wrap--tall">
+          <span class="card__tag">Jusqu'au 10 janvier</span>
+          <img class="card__img" src="https://images.unsplash.com/photo-1513297887119-d46091b24bfa?w=600&q=80" alt="Noël Enchanté Disney">
+        </div>
+        <div class="card__body">
+          <p class="card__cat">Événement saisonnier</p>
+          <h3 class="card__title">Le Noël Enchanté Disney</h3>
+          <p class="card__text">Mickey et ses amis vous invitent à célébrer Noël dans la magie des lumières, des défilés et des feux d'artifice.</p>
+          <a href="#" class="btn-blue" style="display:block;text-align:center;padding:10px 0;">Réserver des billets datés</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__img-wrap card__img-wrap--tall">
+          <span class="card__tag">Nouveauté 2026</span>
+          <img class="card__img" src="https://images.unsplash.com/photo-1773892428007-7ede7e700568?w=600&q=80" alt="Disney Adventure World">
+        </div>
+        <div class="card__body">
+          <p class="card__cat">Disney Adventure World</p>
+          <h3 class="card__title">Disney Cascade of Lights</h3>
+          <p class="card__text">Rejoignez les héros Disney dans un voyage captivant rythmé par des feux d'artifice et des projections spectaculaires.</p>
+          <a href="#" class="card__link">En savoir plus →</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__img-wrap card__img-wrap--tall">
+          <span class="card__tag card__tag--green">Réservable</span>
+          <img class="card__img" src="https://images.unsplash.com/photo-1682636497342-038cd6c0fc13?w=600&q=80" alt="La Reine des Neiges">
+        </div>
+        <div class="card__body">
+          <p class="card__cat">Nouveau monde</p>
+          <h3 class="card__title">Le Monde de La Reine des Neiges</h3>
+          <p class="card__text">Plongez dans Arendelle et vivez l'aventure d'Elsa dans ce nouveau monde immersif ouvert toute l'année.</p>
+          <a href="#" class="card__link">Découvrir →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="sec-divider">
+
+<!-- ===== PERSONALIZED HOTEL RECOS ===== -->
+<section class="section-pad section-perso" id="section-hotel-recos" style="display:none;">
+  <div class="container">
+    <div class="sec-header">
+      <div class="perso-pill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span id="recos-pill-label">Cela pourrait vous intéresser</span>
+      </div>
+      <h2 class="sec-title sec-title--white" id="recos-title">Nos hébergements coup de cœur</h2>
+      <p class="sec-body sec-body--white" id="recos-subtitle">Découvrez nos meilleures adresses pour un séjour inoubliable</p>
+    </div>
+    <div class="cards-grid cards-grid--3">
+
+      <div class="card" style="position:relative;" id="reco-card-marvel">
+        <div style="position:absolute;top:0;left:0;background:#FFD700;color:#003087;font-size:11px;font-weight:700;padding:5px 14px;z-index:1;border-radius:0 0 8px 0;">★ Recommandé pour vous</div>
+        <div style="position:absolute;top:0;right:0;background:#e53935;color:#fff;font-size:13px;font-weight:900;padding:5px 14px;z-index:1;border-radius:0 0 0 8px;">-10% sur cet hôtel</div>
+        <div class="card__img-wrap card__img-wrap--mid">
+          <img class="card__img" src="assets/hotel-marvel.jpg" alt="Disney Hotel New York" onerror="this.src='https://images.unsplash.com/photo-1784411641863-d163d776ed55?w=600&q=80'">
+        </div>
+        <div class="card__body">
+          <div style="color:#FFB800;font-size:13px;margin-bottom:4px;">★★★★</div>
+          <h3 class="card__title">Disney Hotel New York — The Art of Marvel</h3>
+          <p style="font-size:12px;color:#777;margin-bottom:8px;">📍 10 min. des Parcs · Navette gratuite</p>
+          <div class="card__price" id="reco-marvel-price">À partir de <del style="color:#999;font-size:16px;">549 €</del> <strong style="color:#e53935;">494 €</strong> <small>/ nuit · famille 4 pers.</small></div>
+          <a href="hotel-marvel.html" class="btn-blue" style="display:block;text-align:center;padding:10px 0;">Voir l'hôtel</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__img-wrap card__img-wrap--mid">
+          <img class="card__img" src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80" alt="Disney Sequoia Lodge">
+        </div>
+        <div class="card__body">
+          <div style="color:#FFB800;font-size:13px;margin-bottom:4px;">★★★</div>
+          <h3 class="card__title">Disney Sequoia Lodge</h3>
+          <p style="font-size:12px;color:#777;margin-bottom:8px;">📍 15 min. des Parcs · Navette gratuite</p>
+          <div class="card__price">À partir de 289 € <small>/ nuit · famille 4 pers.</small></div>
+          <a href="#" class="btn-blue-outline" style="display:block;text-align:center;padding:9px 0;">Voir l'hôtel</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__img-wrap card__img-wrap--mid">
+          <img class="card__img" src="https://images.unsplash.com/photo-1766250827210-fe7707779637?w=600&q=80" alt="Disney Newport Bay Club">
+        </div>
+        <div class="card__body">
+          <div style="color:#FFB800;font-size:13px;margin-bottom:4px;">★★★★</div>
+          <h3 class="card__title">Disney Newport Bay Club</h3>
+          <p style="font-size:12px;color:#777;margin-bottom:8px;">📍 15 min. des Parcs · Navette gratuite</p>
+          <div class="card__price">À partir de 349 € <small>/ nuit · famille 4 pers.</small></div>
+          <a href="#" class="btn-blue-outline" style="display:block;text-align:center;padding:9px 0;">Voir l'hôtel</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRODUITS COMPLÉMENTAIRES (visibles après affichage recos) ===== -->
+<section class="section-pad" id="section-produits-compl" style="display:none;background:#f8f9ff;">
+  <div class="container">
+    <div class="sec-header">
+      <p class="sec-eyebrow">Complétez votre séjour</p>
+      <h2 class="sec-title">Tout pour vivre la magie sans compromis</h2>
+    </div>
+    <div class="cards-grid cards-grid--4" style="--cols:4;">
+      <div class="card" style="text-align:center;padding:20px 14px;">
+        <div style="font-size:36px;margin-bottom:12px;">⚡</div>
+        <h3 style="font-size:15px;font-weight:700;color:#003087;margin-bottom:8px;">Coupe-file</h3>
+        <p style="font-size:13px;color:#555;margin-bottom:12px;">2 attractions/jour prioritaires — économisez jusqu'à 3h d'attente</p>
+        <div style="font-size:14px;font-weight:700;color:#003087;margin-bottom:12px;">À partir de 15 € / pers.</div>
+        <a href="coupe-file.html" class="btn-blue-outline" style="display:block;text-align:center;padding:8px 0;font-size:13px;">Ajouter</a>
+      </div>
+      <div class="card" style="text-align:center;padding:20px 14px;">
+        <div style="font-size:36px;margin-bottom:12px;">🚗</div>
+        <h3 style="font-size:15px;font-weight:700;color:#003087;margin-bottom:8px;">Parking</h3>
+        <p style="font-size:13px;color:#555;margin-bottom:12px;">Parking officiel Disneyland Paris — accès direct aux Parcs, ouvert 24h/24</p>
+        <div style="font-size:14px;font-weight:700;color:#003087;margin-bottom:12px;">25 € / jour</div>
+        <a href="#" class="btn-blue-outline" style="display:block;text-align:center;padding:8px 0;font-size:13px;">Ajouter</a>
+      </div>
+      <div class="card" style="text-align:center;padding:20px 14px;">
+        <div style="font-size:36px;margin-bottom:12px;">🛡️</div>
+        <h3 style="font-size:15px;font-weight:700;color:#003087;margin-bottom:8px;">Assurance annulation</h3>
+        <p style="font-size:13px;color:#555;margin-bottom:12px;">Annulation toutes causes + assistance rapatriement — tranquillité garantie</p>
+        <div style="font-size:14px;font-weight:700;color:#003087;margin-bottom:12px;">À partir de 12 € / pers.</div>
+        <a href="#" class="btn-blue-outline" style="display:block;text-align:center;padding:8px 0;font-size:13px;">Ajouter</a>
+      </div>
+      <div class="card" style="text-align:center;padding:20px 14px;">
+        <div style="font-size:36px;margin-bottom:12px;">🎁</div>
+        <h3 style="font-size:15px;font-weight:700;color:#003087;margin-bottom:8px;">Pack cadeau Disney</h3>
+        <p style="font-size:13px;color:#555;margin-bottom:12px;">Peluche Mickey, oreilles Disney et carnet souvenir personnalisé livré à l'hôtel</p>
+        <div style="font-size:14px;font-weight:700;color:#003087;margin-bottom:12px;">39 € / pack</div>
+        <a href="#" class="btn-blue-outline" style="display:block;text-align:center;padding:8px 0;font-size:13px;">Ajouter</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sec-divider">
+
+<!-- ===== PLANIFIEZ UNE JOURNÉE ===== -->
+<section class="section-pad" style="background:#fff;" id="planifiez">
+  <div class="container">
+    <div class="sec-header" style="text-align:center;">
+      <p class="sec-eyebrow">Conseils pratiques</p>
+      <h2 class="sec-title">Planifiez une journée qui vous ressemble</h2>
+    </div>
+    <div class="planif-grid">
+      <div class="planif-card">
+        <img src="https://images.unsplash.com/photo-1594845222818-9097c52dabb5?w=700&q=80" alt="Famille avec enfants">
+        <div class="planif-card__overlay"></div>
+        <div class="planif-card__text">
+          <div class="planif-card__title">Vous venez avec des enfants de 0 à 3 ans ?</div>
+          <div class="planif-card__sub">1, 2, 3 à Disney !</div>
+        </div>
+      </div>
+      <div class="planif-card">
+        <img src="https://images.unsplash.com/photo-1682636497342-038cd6c0fc13?w=700&q=80" alt="Famille ado">
+        <div class="planif-card__overlay"></div>
+        <div class="planif-card__text">
+          <div class="planif-card__title">Vous avez un ado de 8 à 17 ans ?</div>
+          <div class="planif-card__sub">Notre programme spécial ados</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sec-divider">
+
+<!-- ===== UNIVERS ===== -->
+<section class="section-pad" id="univers" style="background:#fff;">
+  <div class="container">
+    <div class="sec-header" style="text-align:center;">
+      <h2 class="sec-title">Explorer tous nos univers</h2>
+    </div>
+    <div class="univers-grid">
+      <div class="univ-item">
+        <div class="univ-circle">
+          <img src="https://images.unsplash.com/photo-1594845222818-9097c52dabb5?w=200&q=80" alt="Les histoires Disney">
+        </div>
+        <span class="univ-label">Les histoires Disney</span>
+      </div>
+      <div class="univ-item">
+        <div class="univ-circle">
+          <img src="https://images.unsplash.com/photo-1705962682230-551731f07739?w=200&q=80" alt="Les Princesses Disney">
+        </div>
+        <span class="univ-label">Les Princesses</span>
+      </div>
+      <div class="univ-item">
+        <div class="univ-circle">
+          <img src="https://images.unsplash.com/photo-1773892428007-7ede7e700568?w=200&q=80" alt="Mickey et ses amis">
+        </div>
+        <span class="univ-label">Mickey et ses amis</span>
+      </div>
+      <div class="univ-item">
+        <div class="univ-circle">
+          <img src="https://images.unsplash.com/photo-1682636497342-038cd6c0fc13?w=200&q=80" alt="La Reine des Neiges">
+        </div>
+        <span class="univ-label">La Reine des Neiges</span>
+      </div>
+      <div class="univ-item">
+        <div class="univ-circle">
+          <img src="https://images.unsplash.com/photo-1784411641863-d163d776ed55?w=200&q=80" alt="Marvel">
+        </div>
+        <span class="univ-label">Marvel</span>
+      </div>
+      <div class="univ-item">
+        <div class="univ-circle">
+          <img src="https://images.unsplash.com/photo-1766250827210-fe7707779637?w=200&q=80" alt="Star Wars">
+        </div>
+        <span class="univ-label">Star Wars</span>
+      </div>
+      <div class="univ-item">
+        <div class="univ-circle">
+          <img src="https://images.unsplash.com/photo-1654553786469-ca92c4dbbcc8?w=200&q=80" alt="Pixar">
+        </div>
+        <span class="univ-label">Pixar</span>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:28px;">
+      <a href="#" class="btn-blue-outline">Explorer tous nos univers</a>
+    </div>
+  </div>
+</section>
+
+<hr class="sec-divider">
+
+<!-- ===== SAISONS & ÉVÉNEMENTS ===== -->
+<section class="section-pad" id="saisons-evenements" style="background:#f8f9ff;">
+  <div class="container">
+    <div class="sec-header">
+      <p class="sec-eyebrow">Agenda</p>
+      <h2 class="sec-title">Les Saisons et événements du moment</h2>
+      <p class="sec-body">Demandez le programme ! Découvrez les soirées, spectacles et événements dans les Parcs Disney...</p>
+    </div>
+    <div class="seasons-tabs">
+      <button class="season-tab active">Noël Enchanté 🎄</button>
+      <button class="season-tab">Mickey Fireworks</button>
+      <button class="season-tab">Disney Tales of Magic</button>
+      <button class="season-tab">La Fabrique des Rêves</button>
+    </div>
+    <div class="cards-grid cards-grid--3">
+      <div class="card">
+        <div class="card__img-wrap card__img-wrap--mid">
+          <span class="card__tag">Jusqu'au 10 jan 2027</span>
+          <img class="card__img" src="https://images.unsplash.com/photo-1513297887119-d46091b24bfa?w=600&q=80" alt="Noël Enchanté">
+        </div>
+        <div class="card__body">
+          <p class="card__cat">Parc Disneyland</p>
+          <h3 class="card__title">Mickey et le Magicien</h3>
+          <p class="card__text">Profitez d'un spectacle musical d'illusions époustouflant. Places limitées, garantissez votre accès !</p>
+          <a href="#" class="btn-blue-outline" style="display:block;text-align:center;padding:9px 0;">En savoir plus</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__img-wrap card__img-wrap--mid">
+          <img class="card__img" src="https://images.unsplash.com/photo-1594845222818-9097c52dabb5?w=600&q=80" alt="Mickey Fireworks">
+        </div>
+        <div class="card__body">
+          <p class="card__cat">Événement exclusif</p>
+          <h3 class="card__title">Mickey Fireworks &amp; Friends</h3>
+          <p class="card__text">La nuit, le château s'illumine pour un spectacle de feux d'artifice inoubliable avec Mickey et tous ses amis.</p>
+          <a href="#" class="btn-blue-outline" style="display:block;text-align:center;padding:9px 0;">Voir les dates</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__img-wrap card__img-wrap--mid">
+          <span class="card__tag">Disney Adventure World</span>
+          <img class="card__img" src="https://images.unsplash.com/photo-1682636497342-038cd6c0fc13?w=600&q=80" alt="TOGETHER Pixar">
+        </div>
+        <div class="card__body">
+          <p class="card__cat">Spectacle musical</p>
+          <h3 class="card__title">TOGETHER: Aventure Musicale Pixar</h3>
+          <p class="card__text">Éveillez vos sens lors d'une aventure poétique à travers les mondes de Toy Story, Nemo et Monstres & Cie.</p>
+          <a href="#" class="btn-blue-outline" style="display:block;text-align:center;padding:9px 0;">En savoir plus</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sec-divider">
+
+<!-- ===== HÔTELS ===== -->
+<section class="section-pad" id="hotels" style="background:#fff;">
+  <div class="container">
+    <div class="sec-header">
+      <p class="sec-eyebrow">Hébergement</p>
+      <h2 class="sec-title">Prolongez la magie jusque dans vos rêves</h2>
+      <p class="sec-body">Accès aux Parcs avant l'ouverture, rencontres avec les Personnages à l'hôtel et avantages exclusifs.</p>
+    </div>
+
+    <div class="hotels-list">
+      <div class="hotel-card">
+        <div class="hotel-card__img">
+          <img src="https://images.unsplash.com/photo-1784411641863-d163d776ed55?w=400&q=80" alt="Disneyland Hotel">
+        </div>
+        <div class="hotel-card__body">
+          <div class="hotel-card__info">
+            <div class="hotel-card__stars">★★★★★</div>
+            <h3 class="hotel-card__title">Disneyland Hotel</h3>
+            <p class="hotel-card__location">📍 À l'entrée du Parc Disneyland</p>
+            <p class="hotel-card__text">Célébrez la magie des histoires royales Disney... et écrivez la vôtre ! L'hôtel le plus emblématique, idéalement situé.</p>
+            <div class="hotel-card__badge">⚡ Coupe-file incluse · Accès anticipé aux Parcs</div>
+            <a href="hotels.html" class="btn-blue" style="display:inline-block;padding:9px 22px;">Découvrir l'hôtel</a>
+          </div>
+          <div class="hotel-card__pricing">
+            <div class="hotel-card__from">À partir de</div>
+            <div class="hotel-card__price">699 €</div>
+            <div class="hotel-card__per">/ nuit · famille 4 pers.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hotel-card">
+        <div class="hotel-card__img">
+          <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=400&q=80" alt="Disney Hotel New York">
+        </div>
+        <div class="hotel-card__body">
+          <div class="hotel-card__info">
+            <div class="hotel-card__stars">★★★★</div>
+            <h3 class="hotel-card__title">Disney Hotel New York — The Art of Marvel</h3>
+            <p class="hotel-card__location">📍 10 min. à pied des Parcs · Navette gratuite</p>
+            <p class="hotel-card__text">Vivez comme un Super Héros dans ce décor typiquement new-yorkais. Plus de 350 œuvres originales Marvel.</p>
+            <div class="hotel-card__badge">⚡ Coupe-file disponible en option</div>
+            <a href="hotels.html" class="btn-blue" style="display:inline-block;padding:9px 22px;">Découvrir l'hôtel</a>
+          </div>
+          <div class="hotel-card__pricing">
+            <div class="hotel-card__from">À partir de</div>
+            <div class="hotel-card__price">549 €</div>
+            <div class="hotel-card__per">/ nuit · famille 4 pers.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hotel-card">
+        <div class="hotel-card__img">
+          <img src="https://images.unsplash.com/photo-1766250827210-fe7707779637?w=400&q=80" alt="Disney Newport Bay Club">
+        </div>
+        <div class="hotel-card__body">
+          <div class="hotel-card__info">
+            <div class="hotel-card__stars">★★★★</div>
+            <h3 class="hotel-card__title">Disney Newport Bay Club</h3>
+            <p class="hotel-card__location">📍 15 min. à pied des Parcs · Navette gratuite</p>
+            <p class="hotel-card__text">Réveillez-vous dans une ambiance maritime, décorée de clins d'œil aux aventures nautiques de Mickey.</p>
+            <a href="hotels.html" class="btn-blue-outline" style="display:inline-block;padding:9px 22px;">Découvrir l'hôtel</a>
+          </div>
+          <div class="hotel-card__pricing">
+            <div class="hotel-card__from">À partir de</div>
+            <div class="hotel-card__price">349 €</div>
+            <div class="hotel-card__per">/ nuit · famille 4 pers.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hotel-card">
+        <div class="hotel-card__img">
+          <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80" alt="Disney Sequoia Lodge">
+        </div>
+        <div class="hotel-card__body">
+          <div class="hotel-card__info">
+            <div class="hotel-card__stars">★★★</div>
+            <h3 class="hotel-card__title">Disney Sequoia Lodge</h3>
+            <p class="hotel-card__location">📍 15 min. à pied des Parcs · Navette gratuite</p>
+            <p class="hotel-card__text">Relaxez-vous dans ce lodge boisé, agrémenté de subtiles références à Bambi. Idéal pour les familles.</p>
+            <a href="hotels.html" class="btn-blue-outline" style="display:inline-block;padding:9px 22px;">Découvrir l'hôtel</a>
+          </div>
+          <div class="hotel-card__pricing">
+            <div class="hotel-card__from">À partir de</div>
+            <div class="hotel-card__price">289 €</div>
+            <div class="hotel-card__per">/ nuit · famille 4 pers.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:32px;">
+      <div style="display:flex;gap:12px;justify-content:center;">
+        <a href="hotels.html" class="btn-blue">Voir tous les hôtels</a>
+        <a href="#" class="btn-blue-outline">Comparer les prix</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sec-divider">
+
+<!-- ===== DISNEYLAND PASS ===== -->
+<section class="pass-banner" id="disneyland-pass">
+  <div class="container">
+    <div class="pass-banner__inner">
+      <div style="flex:1;">
+        <p style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Fidélité</p>
+        <h2 class="sec-title sec-title--white">Vous rêvez de vivre la magie encore et encore&nbsp;?</h2>
+        <p class="sec-body sec-body--white" style="margin:16px 0 28px;">Grâce à notre gamme Disneyland Pass, accédez en illimité à 1 ou 2 Parcs pour 170, 210, 300 ou 365 jours par an. Des avantages exclusifs et des tarifs préférentiels tout au long de l'année.</p>
+        <a href="#" class="btn-white-outline" style="border-color:rgba(255,255,255,0.8);">Découvrir les Pass</a>
+      </div>
+      <div class="pass-banner__img">
+        <img src="https://images.unsplash.com/photo-1594845222818-9097c52dabb5?w=700&q=80" alt="Disneyland Pass">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== REASSURANCE ===== -->
+<section class="section-pad" id="reassurance" style="background:#f8f9ff;">
+  <div class="container">
+    <h2 class="sec-title" style="text-align:center;margin-bottom:40px;">Pourquoi réserver directement avec Disneyland Paris&nbsp;?</h2>
+    <div class="reassurance-grid">
+      <div class="reassurance-item">
+        <div class="reassurance-icon">📅</div>
+        <div class="reassurance-title">Réservation flexible</div>
+        <div class="reassurance-text">Modifiez ou annulez sans frais jusqu'à 7 jours avant votre arrivée</div>
+      </div>
+      <div class="reassurance-item">
+        <div class="reassurance-icon">💳</div>
+        <div class="reassurance-title">Paiement fractionné</div>
+        <div class="reassurance-text">Versez un acompte aujourd'hui, puis réglez en 1 à 5 versements</div>
+      </div>
+      <div class="reassurance-item">
+        <div class="reassurance-icon">🏷️</div>
+        <div class="reassurance-title">Meilleur prix garanti</div>
+        <div class="reassurance-text">Trouvez moins cher ailleurs, nous remboursons la différence</div>
+      </div>
+      <div class="reassurance-item">
+        <div class="reassurance-icon">✅</div>
+        <div class="reassurance-title">Aucun frais de dossier</div>
+        <div class="reassurance-text">Le prix affiché est exactement ce que vous payez</div>
+      </div>
+      <div class="reassurance-item">
+        <div class="reassurance-icon">🎩</div>
+        <div class="reassurance-title">Experts Disney</div>
+        <div class="reassurance-text">Organisez votre séjour avec l'aide de nos experts Disney</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NEWSLETTER ===== -->
+<section class="section-pad" style="background:#fff;">
+  <div class="container">
+    <div class="newsletter-block">
+      <div>
+        <div class="newsletter-block__badge">🎁</div>
+        <h3 class="newsletter-block__title">Recevez votre cadeau + 10% de réduction</h3>
+        <p class="newsletter-block__text">Inscrivez-vous et profitez d'une remise dès 70€ d'achat</p>
+      </div>
+      <div class="newsletter-block__form">
+        <input type="email" class="newsletter-input" id="newsletter-email" placeholder="Votre adresse e-mail" onkeydown="if(event.key==='Enter')triggerExitIntent()">
+        <button class="btn-blue" style="padding:12px 22px;border-radius:24px;" onclick="triggerExitIntent()">Je m'inscris !</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <!-- Logo en haut du footer -->
+    <div class="footer-logo-bottom">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 70" height="38" width="140">
+        <defs>
+          <linearGradient id="dlpGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#3BB5E8"/>
+            <stop offset="40%" style="stop-color:#6B4FBB"/>
+            <stop offset="100%" style="stop-color:#E0478A"/>
+          </linearGradient>
+        </defs>
+        <text x="4" y="48" font-family="'Georgia',serif" font-size="56" font-weight="900" font-style="italic" fill="url(#dlpGrad2)">D</text>
+        <text x="44" y="34" font-family="'Georgia',serif" font-size="20" font-weight="700" font-style="italic" fill="url(#dlpGrad2)">isneyland</text>
+        <text x="44" y="56" font-family="'Arial',sans-serif" font-size="14" font-weight="900" letter-spacing="5" fill="url(#dlpGrad2)">PARIS</text>
+      </svg>
+    </div>
+
+    <div class="footer-top">
+      <div class="footer-col">
+        <div class="footer-col-title">Informations légales</div>
+        <ul class="footer-links">
+          <li><a href="#">Conditions générales de réservation</a></li>
+          <li><a href="#">Politique de cookies</a></li>
+          <li><a href="#">Vie privée</a></li>
+          <li><a href="#">Mentions légales</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Services</div>
+        <ul class="footer-links">
+          <li><a href="#">Application mobile</a></li>
+          <li><a href="#">Accessibilité</a></li>
+          <li><a href="#">Horaires des Parcs</a></li>
+          <li><a href="#">Aide et contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">À propos</div>
+        <ul class="footer-links">
+          <li><a href="#">Disneyland Paris</a></li>
+          <li><a href="#">Presse</a></li>
+          <li><a href="#">Recrutement</a></li>
+          <li><a href="#">Durabilité</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Autres sites Disney</div>
+        <ul class="footer-links">
+          <li><a href="#">Disney+</a></li>
+          <li><a href="#">Walt Disney World</a></li>
+          <li><a href="#">Disneyland Resort</a></li>
+        </ul>
+        <div style="margin-top:20px;">
+          <p style="font-size:13px;font-weight:700;color:#333;margin-bottom:4px;">Une question ?</p>
+          <p style="font-size:16px;font-weight:900;color:#003087;">09 69 32 60 61</p>
+          <p style="font-size:11px;color:#999;">Appel non surtaxé</p>
+        </div>
+      </div>
+    </div>
+    <hr class="footer-divider">
+    <div class="footer-bottom">
+      <p class="footer-copyright">© Disney • Pixar &amp; TM Lucasfilm Ltd. MARVEL. Tous droits réservés</p>
+      <div class="footer-social">
+        <a href="#" title="Facebook">f</a>
+        <a href="#" title="Instagram">◻</a>
+        <a href="#" title="YouTube">▶</a>
+        <a href="#" title="TikTok">♪</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== EXIT INTENT MODAL ===== -->
+<div class="modal-overlay" id="exit-intent-overlay" onclick="if(event.target===this)closeExitIntent()">
+  <div class="modal">
+    <button class="modal__close" onclick="closeExitIntent()">✕</button>
+    <img src="assets/logo.jpg" alt="Disneyland Paris" class="modal__logo">
+    <h3 class="modal__title">Avant de partir…</h3>
+    <p class="modal__text">Recevez votre offre personnalisée et restez informé(e) des meilleures offres pour votre famille&nbsp;!</p>
+    <div class="modal__offer">
+      <span class="modal__offer-badge">-10%</span>
+      <span class="modal__offer-text" style="color:#fff;">sur votre première réservation en ligne</span>
+    </div>
+    <form class="modal__form" onsubmit="captureEmail(event)">
+      <input type="email" class="modal__input" id="email-input" placeholder="Votre adresse e-mail" required>
+      <button type="submit" class="btn-blue" style="padding:14px;font-size:15px;border-radius:24px;width:100%;">Je profite de l'offre</button>
+    </form>
+    <p class="modal__legal">En vous inscrivant, vous acceptez de recevoir nos communications. Désabonnement possible à tout moment.</p>
+  </div>
+</div>
+
+<!-- ===== RECONCILIATION TOAST ===== -->
+<div class="recon-toast" id="reconciliation-toast">
+  <div class="recon-toast__icon">⚡</div>
+  <div class="recon-toast__text">
+    <strong>Profil réconcilié !</strong>
+    <span>Bonjour <span id="toast-name">Sophie</span> — votre historique est disponible</span>
+  </div>
+</div>
+
+<!-- ===== AGENT WOODY CHAT WIDGET ===== -->
+<div class="chat-widget" id="chat-widget">
+  <div class="chat-window" id="chat-window">
+    <div class="chat-header">
+      <div class="chat-header__avatar"><img src="assets/woody.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" alt="Woody"></div>
+      <div>
+        <div class="chat-header__name">Woody</div>
+        <div class="chat-header__status">Agent Disney · En ligne</div>
+      </div>
+      <button class="chat-header__close" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input-area">
+      <input type="text" class="chat-input" id="chat-input" placeholder="Posez votre question…" onkeydown="handleChatKey(event)">
+      <button class="chat-send" onclick="sendChatMessage()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+    <div class="chat-disclaimer">Propulsé par Agentforce · Disneyland Paris</div>
+  </div>
+  <div class="chat-bubble" id="chat-bubble" style="display:none;">Une question ? Je vous réponds&nbsp;!</div>
+  <button class="chat-trigger" id="chat-trigger" onclick="toggleChat()" title="Parler à Woody">
+    <img src="assets/woody.png" style="width:44px;height:44px;border-radius:50%;object-fit:cover;" alt="Woody">
+    <span class="chat-badge" id="chat-badge" style="display:none;">1</span>
+  </button>
+</div>
+
+<script src="demo.js"></script>
+</body>
+</html>

@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coupe-file — Disneyland Paris</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Open Sans', Arial, sans-serif; color: #222; background: #fff; }
+    img { display: block; }
+    a { text-decoration: none; color: inherit; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+    /* ── UTIL BAR ── */
+    .util-bar { background: #f4f4f4; border-bottom: 1px solid #e0e0e0; padding: 7px 0; font-size: 12px; color: #555; }
+    .util-bar__inner { display: flex; justify-content: space-between; align-items: center; }
+    .util-bar a { color: #555; transition: color .2s; }
+    .util-bar a:hover { color: #003087; }
+    .util-bar__right { display: flex; gap: 20px; }
+
+    /* ── HEADER ── */
+    .site-header { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 200; }
+    .header-inner { display: flex; align-items: center; height: 72px; }
+    .header-logo { flex-shrink: 0; margin-right: 32px; display: flex; align-items: center; gap: 10px; }
+    .header-nav { display: flex; align-items: center; flex: 1; }
+    .header-nav a { font-size: 13px; font-weight: 600; color: #222; padding: 0 14px; height: 72px; display: flex; align-items: center; border-bottom: 3px solid transparent; transition: all .2s; white-space: nowrap; }
+    .header-nav a:hover { color: #003087; border-bottom-color: #003087; }
+    .header-nav a.active { color: #003087; border-bottom-color: #003087; }
+    .header-ctas { display: flex; gap: 8px; align-items: center; margin-left: auto; flex-shrink: 0; }
+    .btn-outline { border: 2px solid #003087; color: #003087; background: transparent; border-radius: 24px; padding: 8px 18px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: all .2s; display: inline-block; }
+    .btn-outline:hover { background: #003087; color: #fff; }
+    .btn-primary { background: #003087; color: #fff; border: none; border-radius: 24px; padding: 10px 20px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: background .2s; display: inline-block; }
+    .btn-primary:hover { background: #00247a; }
+    .btn-primary-lg { background: #003087; color: #fff; border: none; border-radius: 24px; padding: 14px 32px; font-size: 16px; font-weight: 700; cursor: pointer; transition: background .2s; display: inline-block; }
+    .btn-primary-lg:hover { background: #00247a; }
+    .btn-white-outline { background: transparent; color: #003087; border: 2px solid #003087; border-radius: 24px; padding: 10px 20px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all .2s; display: inline-block; }
+    .btn-white-outline:hover { background: #003087; color: #fff; }
+
+    /* ── HERO COUPE-FILE ── */
+    .hero-cf { position: relative; height: 480px; overflow: hidden; display: flex; align-items: flex-end; }
+    .hero-cf__bg { position: absolute; inset: 0; }
+    .hero-cf__bg img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
+    .hero-cf__overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,10,50,0.9) 0%, rgba(0,10,50,0.4) 50%, rgba(0,10,50,0.15) 100%); }
+    .hero-cf__content { position: relative; z-index: 2; padding-bottom: 56px; }
+    .hero-cf__breadcrumb { font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 12px; }
+    .hero-cf__breadcrumb a { color: rgba(255,255,255,0.6); }
+    .hero-cf__badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,215,0,0.2); border: 1px solid rgba(255,215,0,0.5); color: #FFD700; font-size: 11px; font-weight: 700; padding: 4px 14px; border-radius: 20px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .hero-cf__title { font-family: 'Lato', sans-serif; font-size: clamp(28px, 4vw, 52px); font-weight: 900; color: #fff; line-height: 1.1; margin-bottom: 10px; }
+    .hero-cf__subtitle { font-size: 18px; color: rgba(255,255,255,0.85); margin-bottom: 28px; }
+    .hero-cf__highlights { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-cf__highlight { background: rgba(255,255,255,0.12); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 8px 16px; display: flex; align-items: center; gap: 8px; color: #fff; font-size: 13px; font-weight: 600; }
+
+    /* ── SECTIONS ── */
+    .sec-pad { padding: 56px 0; }
+    .sec-pad--sm { padding: 40px 0; }
+    .sec-eyebrow { font-size: 12px; font-weight: 700; color: #003087; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .sec-title { font-family: 'Lato', sans-serif; font-size: clamp(22px, 3vw, 34px); font-weight: 900; color: #111; margin-bottom: 10px; }
+    .sec-title--white { color: #fff; }
+    .sec-body { font-size: 15px; color: #4b5563; line-height: 1.6; }
+    .sec-body--white { color: rgba(255,255,255,0.8); }
+
+    /* ── AVANTAGES GRID ── */
+    .avantages-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
+    .av-card { background: #fff; border-radius: 12px; padding: 32px 28px; box-shadow: 0 2px 16px rgba(0,0,0,0.07); border: 1px solid #f3f4f6; text-align: center; transition: transform .25s, box-shadow .25s; }
+    .av-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+    .av-card__icon { font-size: 44px; margin-bottom: 16px; }
+    .av-card__title { font-size: 18px; font-weight: 700; color: #003087; margin-bottom: 10px; }
+    .av-card__text { font-size: 14px; color: #4b5563; line-height: 1.6; }
+    .av-card__highlight { margin-top: 12px; background: #fef3c7; border-radius: 6px; padding: 8px 12px; font-size: 13px; font-weight: 700; color: #92400e; }
+
+    /* ── COMMENT ÇA MARCHE ── */
+    .how-steps { display: flex; gap: 0; position: relative; margin-top: 40px; }
+    .how-steps::before { content: ''; position: absolute; top: 28px; left: 40px; right: 40px; height: 2px; background: linear-gradient(90deg, #003087, #3BB5E8); z-index: 0; }
+    .how-step { flex: 1; text-align: center; position: relative; z-index: 1; padding: 0 16px; }
+    .how-step__num { width: 56px; height: 56px; border-radius: 50%; background: #003087; color: #fff; font-size: 22px; font-weight: 900; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; border: 4px solid #fff; box-shadow: 0 2px 12px rgba(0,48,135,0.3); }
+    .how-step__title { font-size: 15px; font-weight: 700; color: #003087; margin-bottom: 8px; }
+    .how-step__text { font-size: 13px; color: #4b5563; line-height: 1.5; }
+
+    /* ── TARIFS ── */
+    .tarifs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; }
+    .tarif-card { border-radius: 12px; overflow: hidden; border: 2px solid #e5e7eb; transition: border-color .25s, transform .25s; }
+    .tarif-card:hover { border-color: #003087; transform: translateY(-4px); }
+    .tarif-card--featured { border-color: #FFD700; box-shadow: 0 4px 24px rgba(255,215,0,0.25); }
+    .tarif-card__header { padding: 20px 24px; background: #f9fafb; border-bottom: 2px solid #e5e7eb; }
+    .tarif-card--featured .tarif-card__header { background: #003087; border-bottom-color: #FFD700; }
+    .tarif-card__badge { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; color: #6b7280; }
+    .tarif-card--featured .tarif-card__badge { color: #FFD700; }
+    .tarif-card__name { font-size: 20px; font-weight: 700; color: #003087; }
+    .tarif-card--featured .tarif-card__name { color: #fff; }
+    .tarif-card__body { padding: 24px; }
+    .tarif-card__price { font-size: 36px; font-weight: 900; color: #003087; }
+    .tarif-card__per { font-size: 13px; color: #6b7280; margin-bottom: 20px; }
+    .tarif-card__features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .tarif-card__features li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #4b5563; }
+    .tarif-card__features li::before { content: '✓'; color: #059669; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .tarif-card__popular { position: absolute; top: -1px; right: 20px; background: #FFD700; color: #003087; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 0 0 8px 8px; }
+
+    /* ── PACKS ── */
+    .packs-grid { display: flex; flex-direction: column; gap: 16px; margin-top: 32px; }
+    .pack-card { background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.07); display: flex; border: 1px solid #e5e7eb; transition: box-shadow .25s; }
+    .pack-card:hover { box-shadow: 0 6px 28px rgba(0,0,0,0.13); }
+    .pack-card--featured { border-color: #FFD700; border-width: 2px; }
+    .pack-card__img { width: 260px; flex-shrink: 0; overflow: hidden; background: #e5e7eb; }
+    .pack-card__img img { width: 100%; height: 100%; object-fit: cover; }
+    .pack-card__body { flex: 1; padding: 22px 24px; display: flex; gap: 16px; align-items: flex-start; }
+    .pack-card__info { flex: 1; }
+    .pack-card__badge { display: inline-block; background: #fef3c7; border: 1px solid #fde68a; border-radius: 4px; font-size: 11px; font-weight: 700; color: #92400e; padding: 3px 10px; margin-bottom: 8px; }
+    .pack-card__badge--green { background: #d1fae5; border-color: #a7f3d0; color: #065f46; }
+    .pack-card__stars { color: #FFB800; font-size: 13px; margin-bottom: 6px; }
+    .pack-card__title { font-size: 18px; font-weight: 700; color: #003087; margin-bottom: 6px; }
+    .pack-card__location { font-size: 13px; color: #6b7280; display: flex; align-items: center; gap: 4px; margin-bottom: 10px; }
+    .pack-card__text { font-size: 14px; color: #4b5563; line-height: 1.5; margin-bottom: 12px; }
+    .pack-card__features { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .pack-card__feature { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #4b5563; background: #f9fafb; border-radius: 4px; padding: 4px 10px; }
+    .pack-card__feature::before { content: '✓'; color: #059669; font-weight: 700; }
+    .pack-card__pricing { text-align: right; flex-shrink: 0; }
+    .pack-card__from { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
+    .pack-card__price { font-size: 28px; font-weight: 900; color: #003087; }
+    .pack-card__per { font-size: 12px; color: #6b7280; margin-bottom: 14px; }
+
+    /* ── FAQ ── */
+    .faq-list { display: flex; flex-direction: column; gap: 0; margin-top: 32px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; }
+    .faq-item { border-bottom: 1px solid #e5e7eb; }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-question { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; cursor: pointer; background: #fff; transition: background .2s; font-size: 15px; font-weight: 600; color: #003087; }
+    .faq-question:hover { background: #f9fafb; }
+    .faq-question svg { flex-shrink: 0; transition: transform .3s; }
+    .faq-item.open .faq-question svg { transform: rotate(180deg); }
+    .faq-answer { display: none; padding: 0 24px 20px; font-size: 14px; color: #4b5563; line-height: 1.6; background: #f9fafb; }
+    .faq-item.open .faq-answer { display: block; }
+
+    /* ── CTA BANNER ── */
+    .cta-banner { background: linear-gradient(135deg, #003087 0%, #1B3A8C 100%); padding: 56px 0; text-align: center; }
+    .cta-banner__title { font-family: 'Lato', sans-serif; font-size: clamp(24px, 3vw, 38px); font-weight: 900; color: #fff; margin-bottom: 12px; }
+    .cta-banner__text { font-size: 17px; color: rgba(255,255,255,0.85); margin-bottom: 28px; }
+    .cta-banner__btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-white { background: #fff; color: #003087; border: none; border-radius: 24px; padding: 14px 32px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all .2s; display: inline-block; }
+    .btn-white:hover { background: #f0f4ff; }
+    .btn-white-ghost { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.6); border-radius: 24px; padding: 12px 28px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all .2s; display: inline-block; }
+    .btn-white-ghost:hover { border-color: #fff; background: rgba(255,255,255,0.1); }
+
+    /* ── FOOTER ── */
+    .footer { background: #fff; border-top: 1px solid #e5e7eb; color: #555; padding: 32px 0; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; }
+    .footer-copyright { font-size: 12px; color: #999; }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 12px; color: #666; transition: color .2s; }
+    .footer-links a:hover { color: #003087; }
+
+    /* ── CHAT (keep from styles.css, override colors) ── */
+    .section--highlight { box-shadow: 0 0 0 4px #FFD700, 0 0 30px rgba(255,215,0,0.3) !important; animation: glowPulse 1.8s ease-in-out; border-radius: 8px; }
+    @keyframes glowPulse { 0% { box-shadow: 0 0 0 0 rgba(255,215,0,0.6); } 50% { box-shadow: 0 0 0 6px rgba(255,215,0,0.3), 0 0 30px rgba(255,215,0,0.4); } 100% { box-shadow: 0 0 0 4px #FFD700, 0 0 30px rgba(255,215,0,0.3); } }
+    .chat-badge { display: none; }
+    .chat-bubble { position: absolute; bottom: 68px; right: 0; background: #fff; color: #003087; font-size: 12px; font-weight: 700; padding: 8px 12px; border-radius: 12px 12px 2px 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.18); white-space: nowrap; pointer-events: none; border: 1.5px solid #e5e7eb; }
+    .chat-bubble::after { content: ''; position: absolute; bottom: -8px; right: 14px; border: 6px solid transparent; border-top-color: #fff; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1)); }
+  </style>
+</head>
+<body>
+
+<!-- ===== UTIL BAR ===== -->
+<div class="util-bar">
+  <div class="container">
+    <div class="util-bar__inner">
+      <a href="#">Horaires des Parcs</a>
+      <div class="util-bar__right">
+        <a href="#">Me connecter</a>
+        <a href="#">FR</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HEADER ===== -->
+<header class="site-header">
+  <div class="container">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo"><img src="assets/logo.jpg" height="52" alt="Disneyland Paris"></a>
+      <nav class="header-nav">
+        <a href="index.html">Nos 2 Parcs</a>
+        <a href="hotels.html">Hébergement</a>
+        <a href="#">Restauration</a>
+        <a href="coupe-file.html" class="active">Coupe-file</a>
+        <a href="#">Réserver</a>
+        <a href="#">Préparer votre visite</a>
+      </nav>
+      <div class="header-ctas">
+        <a href="#" class="btn-outline">Billets</a>
+        <a href="cart.html" class="btn-primary">Hôtel + Billets</a>
+        <a href="cart.html" class="btn-cart"><span class="btn-cart__icon">🛒</span> Mon panier</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero-cf">
+  <div class="hero-cf__bg">
+    <img src="https://images.unsplash.com/photo-1773892428007-7ede7e700568?w=1400&q=85" alt="Coupe-file Disneyland Paris">
+    <div class="hero-cf__overlay"></div>
+  </div>
+  <div class="hero-cf__content">
+    <div class="container">
+      <p class="hero-cf__breadcrumb"><a href="index.html">Accueil</a> / Coupe-file</p>
+      <div class="hero-cf__badge">⚡ Exclusif hôtels Disney</div>
+      <h1 class="hero-cf__title">Disney Premier Access<br>Coupe-file</h1>
+      <p class="hero-cf__subtitle">Profitez au maximum de votre séjour —<br>accédez en priorité aux meilleures attractions</p>
+      <div class="hero-cf__highlights">
+        <div class="hero-cf__highlight">⏱ Jusqu'à 3h économisées par jour</div>
+        <div class="hero-cf__highlight">🎢 Accès prioritaire aux attractions phares</div>
+        <div class="hero-cf__highlight">🏨 Inclus avec les hôtels Disney 4★ et 5★</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== AVANTAGES ===== -->
+<section class="sec-pad" style="background:#f5f7fa;" id="avantages">
+  <div class="container">
+    <div style="text-align:center;">
+      <p class="sec-eyebrow">Pourquoi le coupe-file ?</p>
+      <h2 class="sec-title" style="text-align:center;">Vivez plus, attendez moins</h2>
+      <p class="sec-body" style="text-align:center;margin:0 auto;max-width:600px;">Le Disney Premier Access vous permet d'accéder en priorité aux attractions les plus populaires du Parc et de profiter pleinement de chaque instant de votre séjour.</p>
+    </div>
+    <div class="avantages-grid">
+      <div class="av-card">
+        <div class="av-card__icon">⏱</div>
+        <h3 class="av-card__title">Économisez jusqu'à 3h par jour</h3>
+        <p class="av-card__text">Les queues aux attractions phares peuvent dépasser 90 minutes. Avec le coupe-file, vous accédez à l'entrée prioritaire en moins de 15 minutes.</p>
+        <div class="av-card__highlight">Économie moyenne : 2h45 / jour</div>
+      </div>
+      <div class="av-card">
+        <div class="av-card__icon">🎢</div>
+        <h3 class="av-card__title">Accès aux attractions les plus prisées</h3>
+        <p class="av-card__text">Big Thunder Mountain, Ratatouille, Star Wars Hyperspace Mountain, Flight of Passage — vivez les sensations fortes sans attendre.</p>
+        <div class="av-card__highlight">+12 attractions éligibles</div>
+      </div>
+      <div class="av-card">
+        <div class="av-card__icon">👨‍👩‍👧‍👦</div>
+        <h3 class="av-card__title">Idéal pour les familles avec enfants</h3>
+        <p class="av-card__text">Les enfants en bas âge se fatiguent vite. Grâce au coupe-file, vos enfants restent éveillés et enthousiastes toute la journée.</p>
+        <div class="av-card__highlight">Recommandé familles 6-12 ans</div>
+      </div>
+      <div class="av-card">
+        <div class="av-card__icon">📱</div>
+        <h3 class="av-card__title">Réservation via l'app Disney</h3>
+        <p class="av-card__text">Planifiez vos attractions depuis l'application officielle Disneyland Paris, avant même votre arrivée sur le Parc.</p>
+        <div class="av-card__highlight">Application gratuite iOS &amp; Android</div>
+      </div>
+      <div class="av-card">
+        <div class="av-card__icon">🌅</div>
+        <h3 class="av-card__title">Magic Morning inclus</h3>
+        <p class="av-card__text">Avec votre hôtel Disney, accédez au Parc 1h avant l'ouverture officielle pour profiter des attractions sans aucune file d'attente.</p>
+        <div class="av-card__highlight">Accès dès 8h30 (au lieu de 9h30)</div>
+      </div>
+      <div class="av-card">
+        <div class="av-card__icon">🔄</div>
+        <h3 class="av-card__title">Flexible et illimité</h3>
+        <p class="av-card__text">Utilisez votre coupe-file autant de fois que vous le souhaitez sur les attractions éligibles, pendant toute la durée de votre séjour.</p>
+        <div class="av-card__highlight">Sans limite d'utilisation / jour</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COMMENT ÇA MARCHE ===== -->
+<section class="sec-pad" style="background:#fff;" id="comment-ca-marche">
+  <div class="container">
+    <div style="text-align:center;">
+      <p class="sec-eyebrow">Mode d'emploi</p>
+      <h2 class="sec-title" style="text-align:center;">Comment fonctionne le coupe-file ?</h2>
+    </div>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="how-step__num">1</div>
+        <h4 class="how-step__title">Réservez votre hôtel Disney</h4>
+        <p class="how-step__text">Choisissez un hôtel 4★ ou 5★ avec coupe-file inclus, ou ajoutez-le en option sur les autres hôtels Disney.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-step__num">2</div>
+        <h4 class="how-step__title">Téléchargez l'application</h4>
+        <p class="how-step__text">Activez votre Premier Access dans l'app Disneyland Paris. Toutes vos réservations d'attractions y sont centralisées.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-step__num">3</div>
+        <h4 class="how-step__title">Planifiez vos attractions</h4>
+        <p class="how-step__text">Sélectionnez les attractions prioritaires depuis l'application et choisissez votre créneau horaire dès la veille.</p>
+      </div>
+      <div class="how-step">
+        <div class="how-step__num">4</div>
+        <h4 class="how-step__title">Accédez en priorité</h4>
+        <p class="how-step__text">Le jour J, montrez simplement votre QR code à l'entrée de l'attraction. Fini les longues files d'attente !</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TARIFS ===== -->
+<section class="sec-pad" style="background:#f5f7fa;" id="tarifs">
+  <div class="container">
+    <div style="text-align:center;">
+      <p class="sec-eyebrow">Nos formules</p>
+      <h2 class="sec-title" style="text-align:center;">Choisissez votre formule coupe-file</h2>
+      <p class="sec-body" style="text-align:center;max-width:560px;margin:0 auto;">Du coupe-file à l'unité à la formule illimitée incluse dans votre hôtel — il y a une option pour chaque budget.</p>
+    </div>
+    <div class="tarifs-grid">
+
+      <div class="tarif-card">
+        <div class="tarif-card__header">
+          <div class="tarif-card__badge">À l'unité</div>
+          <div class="tarif-card__name">Premier Access Simple</div>
+        </div>
+        <div class="tarif-card__body">
+          <div class="tarif-card__price">15 €</div>
+          <div class="tarif-card__per">par attraction / par personne</div>
+          <ul class="tarif-card__features">
+            <li>Accès prioritaire à 1 attraction au choix</li>
+            <li>Valable sur les 12 attractions éligibles</li>
+            <li>Réservation via l'app Disneyland Paris</li>
+            <li>Sans obligation d'hôtel Disney</li>
+          </ul>
+          <a href="cart.html" class="btn-white-outline" style="display:block;text-align:center;padding:11px;">Ajouter à mon séjour</a>
+        </div>
+      </div>
+
+      <div class="tarif-card tarif-card--featured" style="position:relative;">
+        <div class="tarif-card__popular">⭐ Le plus choisi</div>
+        <div class="tarif-card__header">
+          <div class="tarif-card__badge">Formule duo</div>
+          <div class="tarif-card__name">Premier Access Duo</div>
+        </div>
+        <div class="tarif-card__body">
+          <div class="tarif-card__price">99 €</div>
+          <div class="tarif-card__per">par personne / séjour complet</div>
+          <ul class="tarif-card__features">
+            <li>Accès illimité à toutes les attractions éligibles</li>
+            <li>Magic Morning (accès anticipé 1h)</li>
+            <li>Réservation anticipée 2 jours avant visite</li>
+            <li>Inclus : Parc Disneyland + Disney Adventure World</li>
+            <li>Option ajoutée à votre réservation d'hôtel</li>
+          </ul>
+          <a href="cart.html" class="btn-primary" style="display:block;text-align:center;padding:12px;font-size:15px;">Ajouter à mon séjour</a>
+        </div>
+      </div>
+
+      <div class="tarif-card" style="position:relative;border-color:#059669;">
+        <div style="position:absolute;top:-1px;right:20px;background:#059669;color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:0 0 8px 8px;">Inclus dans l'hôtel</div>
+        <div class="tarif-card__header">
+          <div class="tarif-card__badge">Offre hôtel</div>
+          <div class="tarif-card__name">Inclus Hôtel 4★ ou 5★</div>
+        </div>
+        <div class="tarif-card__body">
+          <div class="tarif-card__price" style="color:#059669;">Offert</div>
+          <div class="tarif-card__per">inclus dans votre séjour hôtel</div>
+          <ul class="tarif-card__features">
+            <li>Coupe-file inclus pour toute la famille</li>
+            <li>Magic Morning chaque matin du séjour</li>
+            <li>Petit-déjeuner Disney avec les Personnages</li>
+            <li>Navette gratuite hôtel ↔ Parcs</li>
+            <li>Remise de 10% sur les boutiques Disney</li>
+          </ul>
+          <a href="#packs" class="btn-white-outline" style="display:block;text-align:center;padding:11px;border-color:#059669;color:#059669;">Voir les hôtels éligibles</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== BUNDLE EXCLUSIF ===== -->
+<section class="sec-pad" style="background:#fff;" id="packs">
+  <div class="container">
+    <div style="margin-bottom:32px;">
+      <p class="sec-eyebrow">Recommandations</p>
+      <h2 class="sec-title">Hôtels avec coupe-file inclus</h2>
+      <p class="sec-body">Ces hôtels Disney intègrent le coupe-file dans le tarif — la meilleure façon de profiter à 100% de votre séjour.</p>
+    </div>
+
+    <!-- BUNDLE CARD -->
+    <div style="background:linear-gradient(135deg,#0E1A4C 0%,#C8102E 100%);border-radius:20px;padding:32px;margin-bottom:40px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;right:0;width:260px;height:100%;opacity:0.07;background:url('https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=400&q=80') center/cover no-repeat;"></div>
+      <div style="position:absolute;top:16px;right:16px;background:#FFD700;color:#003087;font-size:11px;font-weight:800;padding:5px 14px;border-radius:20px;letter-spacing:.5px;">⭐ OFFRE DATA 360</div>
+      <div style="position:relative;display:flex;gap:40px;align-items:center;flex-wrap:wrap;">
+        <div style="flex:1;min-width:260px;">
+          <p style="color:rgba(255,255,255,0.6);font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin:0 0 8px;">Bundle exclusif · personnalisé pour Sophie</p>
+          <h3 style="color:#fff;font-size:22px;font-weight:800;margin:0 0 6px;line-height:1.2;">Hôtel New York Marvel ★★★★ + Coupe-File Premium</h3>
+          <p style="color:rgba(255,255,255,0.75);font-size:14px;margin:0 0 20px;">Pour 2 nuits · 2 adultes + 2 enfants · 22–24 déc. 2026</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;">
+            <span style="background:rgba(255,255,255,0.12);color:#fff;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;">⚡ Coupe-file 2 attracts/jour</span>
+            <span style="background:rgba(255,255,255,0.12);color:#fff;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;">🍳 Petit-déjeuner Disney offert</span>
+            <span style="background:rgba(255,255,255,0.12);color:#fff;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;">🚗 Parking 2 nuits offert</span>
+            <span style="background:rgba(255,255,255,0.12);color:#fff;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;">✨ Magic Morning</span>
+            <span style="background:rgba(255,255,255,0.12);color:#fff;font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;">🚌 Navette gratuite</span>
+          </div>
+          <p style="color:rgba(255,255,255,0.5);font-size:11px;margin:0;">💡 Agentforce a composé ce bundle basé sur votre profil · segment Famille Premium · LTV 3 200 €/an</p>
+        </div>
+        <div style="text-align:center;flex-shrink:0;">
+          <div style="color:rgba(255,255,255,0.45);font-size:13px;text-decoration:line-through;margin-bottom:4px;">2 × 549 € + 2 × 89 € = 1 276 €</div>
+          <div style="color:#FFD700;font-size:38px;font-weight:900;line-height:1;margin-bottom:4px;">1 088 €</div>
+          <div style="color:rgba(255,255,255,0.6);font-size:13px;margin-bottom:6px;">pour 4 personnes · 2 nuits</div>
+          <div style="background:rgba(255,215,0,0.2);color:#FFD700;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:20px;">Vous économisez 188 € (−15%)</div>
+          <button onclick="addBundleToCart()" style="background:#FFD700;color:#003087;font-size:15px;font-weight:800;padding:14px 28px;border-radius:24px;border:none;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(255,215,0,0.4);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+            🛒 Ajouter ce bundle au panier →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="packs-grid">
+
+      <div class="pack-card pack-card--featured">
+        <div class="pack-card__img">
+          <img src="https://images.unsplash.com/photo-1784411641863-d163d776ed55?w=400&q=80" alt="Disneyland Hotel">
+        </div>
+        <div class="pack-card__body">
+          <div class="pack-card__info">
+            <span class="pack-card__badge pack-card__badge--green">⚡ Coupe-file inclus</span>
+            <div class="pack-card__stars">★★★★★</div>
+            <h3 class="pack-card__title">Disneyland Hotel</h3>
+            <p class="pack-card__location">📍 À l'entrée du Parc Disneyland — 0 min.</p>
+            <p class="pack-card__text">L'hôtel le plus exclusif de Disneyland Paris. Situé à l'entrée même du Parc, avec une vue imprenable sur le château. Coupe-file illimité inclus pour tous les hôtes.</p>
+            <div class="pack-card__features">
+              <span class="pack-card__feature">Coupe-file illimité</span>
+              <span class="pack-card__feature">Magic Morning</span>
+              <span class="pack-card__feature">Petit-déjeuner Disney</span>
+              <span class="pack-card__feature">Concierge dédié</span>
+            </div>
+            <a href="cart.html" class="btn-primary" style="padding:10px 22px;">Réserver — Coupe-file inclus</a>
+          </div>
+          <div class="pack-card__pricing">
+            <div class="pack-card__from">À partir de</div>
+            <div class="pack-card__price">699 €</div>
+            <div class="pack-card__per">/ nuit · famille 4 pers.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pack-card">
+        <div class="pack-card__img">
+          <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=400&q=80" alt="Disney Hotel New York">
+        </div>
+        <div class="pack-card__body">
+          <div class="pack-card__info">
+            <span class="pack-card__badge">⚡ Coupe-file en option</span>
+            <div class="pack-card__stars">★★★★</div>
+            <h3 class="pack-card__title">Disney Hotel New York — The Art of Marvel</h3>
+            <p class="pack-card__location">📍 10 min. à pied des Parcs</p>
+            <p class="pack-card__text">Plongez dans l'univers Marvel à New York. Coupe-file disponible en option pour 2 attractions par jour — idéal pour les familles avec enfants fans de Super-Héros.</p>
+            <div class="pack-card__features">
+              <span class="pack-card__feature">Coupe-file 2 attracts/jour</span>
+              <span class="pack-card__feature">Magic Morning</span>
+              <span class="pack-card__feature">350+ œuvres Marvel originales</span>
+            </div>
+            <a href="cart.html" class="btn-primary" style="padding:10px 22px;">Réserver avec coupe-file</a>
+          </div>
+          <div class="pack-card__pricing">
+            <div class="pack-card__from">À partir de</div>
+            <div class="pack-card__price">549 €</div>
+            <div class="pack-card__per">/ nuit · famille 4 pers.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pack-card">
+        <div class="pack-card__img">
+          <img src="https://images.unsplash.com/photo-1766250827210-fe7707779637?w=400&q=80" alt="Newport Bay Club">
+        </div>
+        <div class="pack-card__body">
+          <div class="pack-card__info">
+            <span class="pack-card__badge">⚡ Coupe-file en option</span>
+            <div class="pack-card__stars">★★★★</div>
+            <h3 class="pack-card__title">Disney Newport Bay Club</h3>
+            <p class="pack-card__location">📍 15 min. à pied des Parcs</p>
+            <p class="pack-card__text">Ambiance bord de mer et décor maritime inspiré de Mickey. Ajoutez le coupe-file à votre réservation pour une expérience encore plus complète.</p>
+            <div class="pack-card__features">
+              <span class="pack-card__feature">Coupe-file en option +99€/pers.</span>
+              <span class="pack-card__feature">Magic Morning inclus</span>
+              <span class="pack-card__feature">Piscine chauffée</span>
+            </div>
+            <a href="cart.html" class="btn-white-outline" style="padding:10px 22px;">Réserver</a>
+          </div>
+          <div class="pack-card__pricing">
+            <div class="pack-card__from">À partir de</div>
+            <div class="pack-card__price">349 €</div>
+            <div class="pack-card__per">/ nuit · famille 4 pers.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="sec-pad" style="background:#f5f7fa;" id="faq">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:32px;">
+      <p class="sec-eyebrow">Questions fréquentes</p>
+      <h2 class="sec-title" style="text-align:center;">Tout savoir sur le coupe-file</h2>
+    </div>
+    <div style="max-width:760px;margin:0 auto;">
+      <div class="faq-list">
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            Combien de fois puis-je utiliser le coupe-file ?
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">Avec la formule hôtel 4★ ou 5★, le coupe-file est illimité sur toutes les attractions éligibles pendant toute la durée de votre séjour. Avec Premier Access Duo (+99€/pers.), vous avez également un accès illimité. Avec Premier Access Simple (15€/attraction), vous bénéficiez d'un accès prioritaire pour une seule attraction à la fois.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            Quelles attractions sont incluses dans le coupe-file ?
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">Le coupe-file est disponible sur 12 attractions majeures des 2 Parcs : Big Thunder Mountain, Ratatouille: The Adventure, Star Wars Hyperspace Mountain, Pirates of the Caribbean, Indiana Jones and the Temple of Peril, Buzz Lightyear Laser Blast, Crush's Coaster, The Twilight Zone Tower of Terror, Flight of Passage, Avengers Assemble: Flight Force, et d'autres encore.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            Est-ce que le coupe-file fonctionne pendant le Noël Enchanté ?
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">Oui, le coupe-file fonctionne toute l'année, y compris pendant les périodes d'affluence comme les fêtes de Noël. C'est d'ailleurs pendant ces périodes qu'il est le plus précieux — les files d'attente peuvent dépasser 120 minutes en haute saison.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            Comment réserver le coupe-file à l'avance ?
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">Téléchargez l'application officielle Disneyland Paris (gratuite sur iOS et Android). Connectez-vous avec votre réservation, puis accédez à la section Premier Access. Vous pouvez planifier vos attractions jusqu'à 2 jours à l'avance si vous avez la formule Duo ou l'hôtel éligible.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            Le coupe-file est-il disponible pour les enfants ?
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="faq-answer">Absolument. Le coupe-file s'applique à tous les membres de votre groupe, enfants inclus. Pour les familles avec jeunes enfants, nous recommandons particulièrement les formules avec Magic Morning, qui vous permettent d'accéder aux attractions avant les foules dès 8h30.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA BANNER ===== -->
+<div class="cta-banner">
+  <div class="container">
+    <h2 class="cta-banner__title">Profitez au maximum de votre séjour Disney</h2>
+    <p class="cta-banner__text">Réservez votre hôtel avec coupe-file inclus et économisez jusqu'à 3h par jour</p>
+    <div class="cta-banner__btns">
+      <a href="cart.html" class="btn-white">Réserver Hôtel + Coupe-file</a>
+      <a href="hotels.html" class="btn-white-ghost">Comparer les hôtels</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p class="footer-copyright">© Disney • Pixar &amp; TM Lucasfilm Ltd. MARVEL. Tous droits réservés</p>
+      <div class="footer-links">
+        <a href="#">Aide &amp; Contact</a>
+        <a href="#">Mentions légales</a>
+        <a href="#">Politique de confidentialité</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== AGENT WOODY CHAT WIDGET ===== -->
+<div class="chat-widget" id="chat-widget">
+  <div class="chat-window" id="chat-window">
+    <div class="chat-header">
+      <div class="chat-header__avatar"><img src="assets/woody.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" alt="Woody"></div>
+      <div>
+        <div class="chat-header__name">Woody</div>
+        <div class="chat-header__status">Agent Disney · En ligne</div>
+      </div>
+      <button class="chat-header__close" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input-area">
+      <input type="text" class="chat-input" id="chat-input" placeholder="Posez votre question…" onkeydown="handleChatKey(event)">
+      <button class="chat-send" onclick="sendChatMessage()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+    <div class="chat-disclaimer">Propulsé par Agentforce · Disneyland Paris</div>
+  </div>
+  <div class="chat-bubble" id="chat-bubble" style="display:none;">Une question ? Je vous réponds&nbsp;!</div>
+  <button class="chat-trigger" id="chat-trigger" onclick="toggleChat()" title="Parler à Woody">
+    <img src="assets/woody.png" style="width:44px;height:44px;border-radius:50%;object-fit:cover;" alt="Woody">
+    <span class="chat-badge" id="chat-badge" style="display:none;">1</span>
+  </button>
+</div>
+
+<script>
+function toggleFaq(item) {
+  item.classList.toggle('open');
+}
+
+function addBundleToCart() {
+  sessionStorage.setItem('dlp_bundle_coupeFile', '1');
+  const btn = document.querySelector('button[onclick="addBundleToCart()"]');
+  if (btn) {
+    btn.textContent = '✓ Ajouté — redirection…';
+    btn.style.background = '#059669';
+    btn.style.color = '#fff';
+    btn.disabled = true;
+  }
+  setTimeout(() => { window.location.href = 'cart.html'; }, 800);
+}
+
+// Auto-open Woody if navigated from chat
+window.addEventListener('DOMContentLoaded', function() {
+  if (sessionStorage.getItem('woody_open') === '1') {
+    sessionStorage.removeItem('woody_open');
+    const msg = sessionStorage.getItem('woody_msg') || '';
+    sessionStorage.removeItem('woody_msg');
+    setTimeout(function() {
+      const win = document.getElementById('chat-window');
+      if (win) {
+        win.classList.add('open');
+        win.style.display = 'flex';
+      }
+      if (typeof initChat === 'function') initChat();
+      if (msg && typeof appendChatMessage === 'function') {
+        setTimeout(function() { appendChatMessage('bot', msg); }, 600);
+      }
+    }, 300);
+  }
+});
+</script>
+<script src="demo.js"></script>
+</body>
+</html>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon panier — Disneyland Paris</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Open Sans', Arial, sans-serif; color: #222; background: #fff; }
+    img { display: block; }
+    a { text-decoration: none; color: inherit; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+    /* ── UTIL BAR ── */
+    .util-bar { background: #f4f4f4; border-bottom: 1px solid #e0e0e0; padding: 7px 0; font-size: 12px; color: #555; }
+    .util-bar__inner { display: flex; justify-content: space-between; align-items: center; }
+    .util-bar a { color: #555; transition: color .2s; }
+    .util-bar a:hover { color: #003087; }
+    .util-bar__right { display: flex; gap: 20px; align-items: center; }
+
+    /* ── HEADER ── */
+    .site-header { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.07); position: sticky; top: 0; z-index: 200; }
+    .header-inner { display: flex; align-items: center; height: 72px; }
+    .header-logo { flex-shrink: 0; margin-right: 28px; display: flex; align-items: center; }
+    .header-center { flex: 1; text-align: center; color: #555; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .header-secure { display: flex; align-items: center; gap: 6px; color: #555; font-size: 12px; flex-shrink: 0; }
+
+    /* ── STEPS ── */
+    .step-indicator { display: flex; align-items: center; gap: 0; padding: 32px 0 24px; }
+    .step { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #9ca3af; flex: 1; }
+    .step--active { color: #003087; }
+    .step--done { color: #059669; }
+    .step__num { width: 28px; height: 28px; border-radius: 50%; background: #e5e7eb; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+    .step--active .step__num { background: #003087; color: #fff; }
+    .step--done .step__num { background: #059669; color: #fff; }
+    .step__connector { flex: 1; height: 2px; background: #e5e7eb; margin: 0 8px; }
+
+    /* ── LAYOUT ── */
+    .checkout-layout { display: grid; grid-template-columns: 1fr 380px; gap: 40px; padding-bottom: 64px; align-items: start; }
+    .checkout-main h1 { font-size: 32px; font-weight: 900; color: #003087; margin-bottom: 32px; }
+
+    /* ── CART ITEMS ── */
+    .cart-item { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .cart-item__header { display: flex; gap: 20px; padding: 20px; }
+    .cart-item__img { width: 120px; height: 90px; border-radius: 8px; overflow: hidden; background: #e5e7eb; flex-shrink: 0; }
+    .cart-item__img img { width: 100%; height: 100%; object-fit: cover; }
+    .cart-item__info { flex: 1; }
+    .cart-item__hotel-stars { color: #F59E0B; font-size: 14px; margin-bottom: 4px; }
+    .cart-item__title { font-size: 18px; font-weight: 700; color: #003087; margin-bottom: 4px; }
+    .cart-item__type { font-size: 13px; color: #6b7280; margin-bottom: 8px; }
+    .cart-item__dates { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #4b5563; }
+    .cart-item__price { font-size: 22px; font-weight: 900; color: #003087; }
+    .cart-item__price-per { font-size: 12px; color: #6b7280; }
+    .cart-item__remove { background: none; border: none; font-size: 12px; color: #9ca3af; cursor: pointer; text-decoration: underline; font-family: inherit; }
+    .cart-item__remove:hover { color: #003087; }
+    .cart-item__features { background: #f9fafb; padding: 12px 20px; border-top: 1px solid #e5e7eb; display: flex; flex-wrap: wrap; gap: 12px; }
+    .cart-feature { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #4b5563; }
+    .cart-feature::before { content: '✓'; color: #059669; font-weight: 700; }
+
+    /* ── SUMMARY ── */
+    .checkout-summary { position: sticky; top: 100px; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    .checkout-summary h3 { font-size: 20px; font-weight: 900; color: #003087; margin-bottom: 20px; }
+    .summary-line { display: flex; justify-content: space-between; font-size: 14px; color: #4b5563; margin-bottom: 10px; }
+    .summary-line--total { font-size: 18px; font-weight: 900; color: #003087; padding-top: 14px; margin-top: 14px; border-top: 2px solid #e5e7eb; }
+    .summary-line--savings { color: #059669; font-weight: 700; }
+    .summary-promo { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px; margin: 16px 0; font-size: 13px; color: #065f46; display: flex; align-items: center; gap: 8px; }
+    .checkout-trust { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
+    .trust-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #6b7280; }
+
+    /* ── FORM ── */
+    .form-section { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin-top: 32px; }
+    .form-section h3 { font-size: 18px; font-weight: 700; color: #003087; margin-bottom: 20px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-grid--full { grid-column: 1 / -1; }
+    .form-label { font-size: 12px; font-weight: 700; color: #6b7280; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-input { width: 100%; border: 1.5px solid #d1d5db; border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: inherit; outline: none; transition: border-color .2s; }
+    .form-input:focus { border-color: #003087; }
+
+    /* ── BUTTONS ── */
+    .btn-blue { background: #003087; color: #fff; border: none; border-radius: 24px; padding: 13px 24px; font-size: 14px; font-weight: 700; cursor: pointer; width: 100%; font-family: inherit; transition: background .2s; }
+    .btn-blue:hover { background: #00247a; }
+
+    /* ── PERSO BADGE ── */
+    .perso-badge { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #003087, #0057b8); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; margin-bottom: 6px; }
+    .price-original { font-size: 14px; color: #9ca3af; text-decoration: line-through; }
+    .price-discounted { font-size: 22px; font-weight: 900; color: #059669; }
+    .price-saving { font-size: 12px; color: #059669; font-weight: 700; }
+
+    /* ── DC PANEL (Data 360) ── */
+    .dc-panel { background: #0f172a; color: #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 24px; font-size: 12px; }
+    .dc-panel__title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+    .dc-panel__title::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .dc-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .dc-row:last-child { border-bottom: none; }
+    .dc-label { color: #94a3b8; }
+    .dc-value { color: #e2e8f0; font-weight: 600; }
+    .dc-value--green { color: #10b981; }
+    .dc-value--gold { color: #F59E0B; }
+    .dc-signal { display: flex; align-items: center; gap: 6px; padding: 8px 10px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2); border-radius: 6px; margin-top: 10px; font-size: 11px; color: #6ee7b7; }
+
+    /* ── UPSELL COUPE-FILE ── */
+    .upsell-block { background: linear-gradient(135deg, #1e1b4b, #312e81); color: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(99,102,241,0.3); }
+    .upsell-block__tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #a5b4fc; margin-bottom: 8px; }
+    .upsell-block__title { font-size: 16px; font-weight: 900; margin-bottom: 6px; }
+    .upsell-block__text { font-size: 13px; color: rgba(255,255,255,0.75); margin-bottom: 14px; line-height: 1.5; }
+    .upsell-block__perks { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .upsell-perk { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #a5b4fc; }
+    .upsell-perk::before { content: '★'; color: #F59E0B; }
+    .upsell-block__cta { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .upsell-price { font-size: 20px; font-weight: 900; }
+    .upsell-price span { font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.6); }
+    .btn-gold { background: #F59E0B; color: #1a1a1a; border: none; border-radius: 20px; padding: 10px 22px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; transition: background .2s; }
+    .btn-gold:hover { background: #FBBF24; }
+
+    /* ── ABANDON TOAST ── */
+    .abandon-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #003087; color: #fff; border-radius: 12px; padding: 16px 24px; font-size: 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.25); z-index: 900; animation: slideUp 0.4s ease; max-width: 480px; width: 90%; }
+    .abandon-toast__timer { background: #FFD700; color: #003087; font-weight: 900; padding: 4px 10px; border-radius: 20px; font-size: 13px; flex-shrink: 0; }
+    @keyframes slideUp { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+    /* ── FOOTER ── */
+    .footer { background: #fff; border-top: 1px solid #e5e7eb; padding: 32px 0; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; }
+    .footer-copyright { font-size: 12px; color: #999; }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 12px; color: #666; transition: color .2s; }
+    .footer-links a:hover { color: #003087; }
+  </style>
+</head>
+<body>
+
+<!-- ===== DEMO BAR ===== -->
+<div style="background:#003087;color:rgba(255,255,255,0.8);font-size:11px;padding:7px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+  <span>🎬 <strong style="color:#FFD700;">Demo Disneyland Paris</strong> — Agentforce Marketing · Data 360</span>
+  <div style="display:flex;gap:12px;align-items:center;">
+    <a href="index.html" style="color:#FFD700;font-weight:700;text-decoration:underline;font-size:11px;">← Accueil</a>
+    <button onclick="simulateAbandon()" style="background:#FFD700;color:#003087;font-size:11px;font-weight:800;padding:4px 12px;border-radius:12px;border:none;cursor:pointer;">📧 Simuler abandon → email</button>
+  </div>
+</div>
+
+<!-- ===== UTIL BAR ===== -->
+<div class="util-bar">
+  <div class="container">
+    <div class="util-bar__inner">
+      <a href="#">Horaires des Parcs</a>
+      <div class="util-bar__right">
+        <a href="index.html">← Continuer mes achats</a>
+        <a href="#">FR</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HEADER ===== -->
+<header class="site-header">
+  <div class="container">
+    <div class="header-inner">
+      <a href="index.html" class="header-logo"><img src="assets/logo.jpg" height="52" alt="Disneyland Paris"></a>
+      <div class="header-center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#003087" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Réservation sécurisée
+      </div>
+      <div class="header-secure">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Paiement 100% sécurisé
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <!-- Steps -->
+  <div class="step-indicator">
+    <div class="step step--done">
+      <div class="step__num">✓</div>
+      <span>Mon panier</span>
+    </div>
+    <div class="step__connector"></div>
+    <div class="step step--active">
+      <div class="step__num">2</div>
+      <span>Coordonnées</span>
+    </div>
+    <div class="step__connector"></div>
+    <div class="step">
+      <div class="step__num">3</div>
+      <span>Paiement</span>
+    </div>
+    <div class="step__connector"></div>
+    <div class="step">
+      <div class="step__num">4</div>
+      <span>Confirmation</span>
+    </div>
+  </div>
+
+  <div class="checkout-layout">
+
+    <!-- Cart items -->
+    <div class="checkout-main">
+      <h1>Mon panier</h1>
+
+      <!-- ── ITEM 1 : Hôtel Marvel avec -10% Sophie ── -->
+      <div class="cart-item">
+        <div class="cart-item__header">
+          <div class="cart-item__img">
+            <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=240&q=80" alt="Disney Hotel New York Marvel">
+          </div>
+          <div class="cart-item__info">
+            <div class="perso-badge">⚡ Offre personnalisée · Data 360</div>
+            <div class="cart-item__hotel-stars">★★★★</div>
+            <div class="cart-item__title">Disney Hotel New York — The Art of Marvel</div>
+            <div class="cart-item__type">Chambre Deluxe · 2 nuits · Noël Enchanté</div>
+            <div class="cart-item__dates">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              22 déc. 2026 → 24 déc. 2026 · 2 adultes, 2 enfants
+            </div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div class="price-original">2 × 549 € = 1 098 €</div>
+            <div class="price-discounted">988 €</div>
+            <div class="price-saving">Vous économisez 110 € (−10%)</div>
+            <button class="cart-item__remove" onclick="simulateAbandon()">Supprimer</button>
+          </div>
+        </div>
+        <div class="cart-item__features">
+          <span class="cart-feature">Accès anticipé aux Parcs (30 min avant)</span>
+          <span class="cart-feature">Petit-déjeuner Disney inclus</span>
+          <span class="cart-feature">Navette gratuite hôtel ↔ Parcs</span>
+          <span class="cart-feature">Annulation gratuite jusqu'au 15 déc.</span>
+        </div>
+      </div>
+
+      <!-- ── ITEM 2 : Billets 2J ── -->
+      <div class="cart-item">
+        <div class="cart-item__header">
+          <div class="cart-item__img">
+            <img src="https://images.unsplash.com/photo-1513297887119-d46091b24bfa?w=240&q=80" alt="Billets Noël Enchanté Disney">
+          </div>
+          <div class="cart-item__info">
+            <div class="cart-item__title">🎟️ Billets 2 jours — Noël Enchanté Disney</div>
+            <div class="cart-item__type">4 billets · 2 adultes + 2 enfants · 2 Parcs</div>
+            <div class="cart-item__dates">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              22 et 23 déc. 2026 · 100% remboursable
+            </div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div class="cart-item__price" id="tickets-total">516 €</div>
+            <div class="cart-item__price-per" id="tickets-detail">4 × 129 €</div>
+          </div>
+        </div>
+        <div class="cart-item__features">
+          <span class="cart-feature">Accès à Disneyland Park + Disney Adventure World</span>
+          <span class="cart-feature">Remboursable jusqu'à 3 jours avant la visite</span>
+        </div>
+      </div>
+
+      <!-- ── UPSELL FAST PASS ── -->
+      <div class="upsell-block" id="fp-upsell-block">
+        <div class="upsell-block__tag">⚡ Recommandé par Agentforce · Familles Premium</div>
+        <div class="upsell-block__title">Ajoutez le Coupe-File (Fast Pass) — Noël Enchanté</div>
+        <div class="upsell-block__text">
+          Les familles comme la vôtre profitent en moyenne de <strong>6 attractions de plus</strong> par journée. Pendant les fêtes, les files d'attente atteignent 90 min sur Big Thunder Mountain ou Star Wars: Hyperspace.
+        </div>
+        <div class="upsell-block__perks">
+          <span class="upsell-perk">1 passage prioritaire / heure</span>
+          <span class="upsell-perk">Valable les 2 jours</span>
+          <span class="upsell-perk">Toutes les attractions incluses</span>
+          <span class="upsell-perk">App Disney officielle intégrée</span>
+        </div>
+        <div class="upsell-block__cta">
+          <div>
+            <div class="upsell-price" id="fp-upsell-price">+15 € <span>par personne / jour · 4 pers. × 2j. = 120 €</span></div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px;">Déjà ajouté pour 78% des familles ce week-end</div>
+          </div>
+          <button class="btn-gold" id="fp-add-btn" onclick="addFastPass()">⚡ Ajouter le coupe-file →</button>
+        </div>
+      </div>
+
+      <!-- ── ITEM 3 : Fast Pass (masqué jusqu'à ajout) ── -->
+      <div class="cart-item" id="fp-cart-item" style="display:none;">
+        <div class="cart-item__header">
+          <div class="cart-item__img" style="background:linear-gradient(135deg,#1e1b4b,#312e81);display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:40px;">⚡</span>
+          </div>
+          <div class="cart-item__info">
+            <div class="cart-item__title">⚡ Coupe-File Premium — Fast Pass</div>
+            <div class="cart-item__type">4 personnes · 2 jours · Toutes attractions</div>
+            <div class="cart-item__dates">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              22 et 23 déc. 2026 · Activé dès l'entrée du Parc
+            </div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;">
+            <div class="cart-item__price">120 €</div>
+            <div class="cart-item__price-per">4 × 2j. × 15 €</div>
+            <button class="cart-item__remove" onclick="removeFastPass()">Supprimer</button>
+          </div>
+        </div>
+        <div class="cart-item__features">
+          <span class="cart-feature">Accès prioritaire à toutes les attractions premium</span>
+          <span class="cart-feature">1 passage coupe-file par attraction par heure</span>
+        </div>
+      </div>
+
+      <!-- Checkout form -->
+      <div class="form-section">
+        <h3>Vos coordonnées</h3>
+        <div class="form-grid">
+          <div>
+            <label class="form-label">Prénom</label>
+            <input type="text" class="form-input" id="field-prenom" placeholder="Sophie">
+          </div>
+          <div>
+            <label class="form-label">Nom</label>
+            <input type="text" class="form-input" id="field-nom" placeholder="Martin">
+          </div>
+          <div class="form-grid--full">
+            <label class="form-label">Adresse e-mail</label>
+            <input type="email" class="form-input" id="field-email" placeholder="sophie.martin@email.fr">
+          </div>
+        </div>
+        <button class="btn-blue" style="margin-top:20px;" onclick="simulateAbandon()">Continuer vers le paiement →</button>
+        <p style="font-size:11px;color:#9ca3af;text-align:center;margin-top:12px;">En continuant, vous acceptez nos conditions générales de réservation.</p>
+      </div>
+    </div>
+
+    <!-- Summary + DC Panel -->
+    <div class="checkout-summary">
+
+      <!-- DATA 360 PANEL -->
+      <div class="dc-panel">
+        <div class="dc-panel__title">Data 360 · Profil actif</div>
+        <div class="dc-row">
+          <span class="dc-label">Profil</span>
+          <span class="dc-value">Sophie Martin</span>
+        </div>
+        <div class="dc-row">
+          <span class="dc-label">Segment</span>
+          <span class="dc-value dc-value--gold">Famille Premium</span>
+        </div>
+        <div class="dc-row">
+          <span class="dc-label">LTV prédictif</span>
+          <span class="dc-value dc-value--green">€ 3 200 / an</span>
+        </div>
+        <div class="dc-row">
+          <span class="dc-label">Hôtel consulté</span>
+          <span class="dc-value">Marvel ★★★★</span>
+        </div>
+        <div class="dc-row">
+          <span class="dc-label">Réduction appliquée</span>
+          <span class="dc-value dc-value--green">−10% fidélité</span>
+        </div>
+        <div class="dc-signal">⚡ Recommandation Coupe-File activée · score 94/100</div>
+      </div>
+
+      <h3>Récapitulatif</h3>
+      <div class="summary-line">
+        <span>Hôtel New York Marvel (2 nuits)</span>
+        <span id="hotel-price">988 €</span>
+      </div>
+      <div class="summary-line">
+        <span>4 billets 2 jours</span>
+        <span id="sum-tickets">516 €</span>
+      </div>
+      <div class="summary-line" id="coupefilerow" style="display:none;">
+        <span>⚡ Coupe-file (4 pers. × 2j.)</span>
+        <span>120 €</span>
+      </div>
+      <div class="summary-line summary-line--savings">
+        <span>🏷️ Offre personnalisée Sophie</span>
+        <span>−110 €</span>
+      </div>
+      <div class="summary-line summary-line--total">
+        <span>Total</span>
+        <span id="total-price">1 394 €</span>
+      </div>
+      <div class="summary-promo">
+        ✅ Annulation gratuite jusqu'au 15 décembre 2026
+      </div>
+      <button class="btn-blue" style="margin-top:8px;" onclick="simulateAbandon()">Finaliser la réservation →</button>
+      <button onclick="simulateAbandon()" style="width:100%;margin-top:8px;background:transparent;border:2px dashed #FFD700;color:#003087;font-size:12px;font-weight:700;padding:8px;border-radius:8px;cursor:pointer;font-family:inherit;">📧 Simuler email panier abandonné →</button>
+      <div class="checkout-trust">
+        <div class="trust-item">🔒 Paiement 100% sécurisé</div>
+        <div class="trust-item">💳 Paiement en plusieurs fois disponible</div>
+        <div class="trust-item">📞 Experts Disney : 09 69 32 60 61</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ABANDON TOAST -->
+<div class="abandon-toast" id="abandon-toast" style="display:none;">
+  <div class="abandon-toast__timer" id="abandon-timer">10</div>
+  <div>
+    <strong>Votre panier est sauvegardé&nbsp;!</strong><br>
+    <span style="font-size:13px;color:rgba(255,255,255,0.8);">Vous recevrez un email de rappel avec votre sélection dans 2h.</span>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <p class="footer-copyright">© Disney • Pixar &amp; TM Lucasfilm Ltd. MARVEL. Tous droits réservés</p>
+      <div class="footer-links">
+        <a href="#">Aide &amp; Contact</a>
+        <a href="#">Mentions légales</a>
+        <a href="#">Politique de confidentialité</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+let fastPassAdded = false;
+const HOTEL_PRICE = 988;
+const TICKET_PRICE = 516;
+const SAVINGS = 110;
+
+function recalcTotal() {
+  const fp = fastPassAdded ? 120 : 0;
+  const total = HOTEL_PRICE + TICKET_PRICE + fp - SAVINGS;
+  document.getElementById('total-price').textContent = total.toLocaleString('fr-FR') + ' €';
+  const row = document.getElementById('coupefilerow');
+  if (row) row.style.display = fastPassAdded ? 'flex' : 'none';
+}
+
+function addFastPass() {
+  if (fastPassAdded) return;
+  fastPassAdded = true;
+
+  // Afficher l'item dans le panier
+  document.getElementById('fp-cart-item').style.display = 'block';
+
+  // Masquer le bloc upsell
+  const upsell = document.getElementById('fp-upsell-block');
+  if (upsell) upsell.style.display = 'none';
+
+  recalcTotal();
+
+  if (typeof addBotMessage === 'function') {
+    addBotMessage('⚡ Coupe-File ajouté ! Pendant les fêtes vous gagnerez environ 4h de file — vos enfants vont adorer !');
+  }
+}
+
+function removeFastPass() {
+  fastPassAdded = false;
+  document.getElementById('fp-cart-item').style.display = 'none';
+  const upsell = document.getElementById('fp-upsell-block');
+  if (upsell) upsell.style.display = 'block';
+  recalcTotal();
+}
+
+function simulateAbandon() {
+  const toast = document.getElementById('abandon-toast');
+  toast.style.display = 'flex';
+  let countdown = 10;
+  const timer = document.getElementById('abandon-timer');
+  const interval = setInterval(() => {
+    countdown--;
+    if (timer) timer.textContent = countdown;
+    if (countdown <= 0) {
+      clearInterval(interval);
+      toast.style.display = 'none';
+      window.location.href = 'email-panier.html';
+    }
+  }, 1000);
+}
+</script>
+
+<!-- AGENT WOODY CHAT WIDGET -->
+<div class="chat-widget" id="chat-widget">
+  <div class="chat-window" id="chat-window">
+    <div class="chat-header">
+      <div class="chat-header__avatar"><img src="assets/woody.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" alt="Woody"></div>
+      <div>
+        <div class="chat-header__name">Woody</div>
+        <div class="chat-header__status">Agent Disney · En ligne</div>
+      </div>
+      <button class="chat-header__close" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input-area">
+      <input type="text" class="chat-input" id="chat-input" placeholder="Posez votre question…" onkeydown="handleChatKey(event)">
+      <button class="chat-send" onclick="sendChatMessage()">→</button>
+    </div>
+    <div class="chat-disclaimer">Propulsé par Agentforce · Disneyland Paris</div>
+  </div>
+  <button class="chat-trigger" id="chat-trigger" onclick="toggleChat()">
+    <img src="assets/woody.png" style="width:44px;height:44px;border-radius:50%;object-fit:cover;" alt="Woody">
+    <span class="chat-badge" id="chat-badge">1</span>
+  </button>
+</div>
+<script src="demo.js"></script>
+<script>
+// Auto-activer le coupe-file si on vient du bundle
+if (window._preAddCoupe) {
+  const row = document.getElementById('coupefilerow');
+  if (row) row.style.display = 'flex';
+  const total = document.getElementById('total-price');
+  if (total) total.textContent = '1 804 €';
+  const btn = document.querySelector('.upsell-block .btn-gold');
+  if (btn) { btn.textContent = '✓ Coupe-file inclus · Bundle Marvel'; btn.style.background = '#059669'; btn.disabled = true; }
+  coupeAdded = true;
+  // Signal Data 360
+  const dc = document.getElementById('dc-signal-list');
+  if (dc) {
+    const sig = document.createElement('div');
+    sig.className = 'dc-signal';
+    sig.textContent = 'Bundle Hôtel NY Marvel + Coupe-file · ajout depuis coupe-file.html';
+    dc.prepend(sig);
+  }
+  // Message Woody
+  setTimeout(() => {
+    if (typeof addBotMessage === 'function') {
+      addBotMessage('🎯 Parfait Sophie ! J\'ai ajouté le bundle Hôtel Marvel + Coupe-File avec le parking et le petit-déjeuner offerts. Vous économisez 188 € !');
+    }
+  }, 600);
+}
+</script>
+</body>
+</html>

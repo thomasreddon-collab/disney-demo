@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsApp — Achat tickets Disney avec Woody</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a1a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── BACKGROUND ── */
+    #bg-scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
+    #bg-photo {
+      position: absolute; inset: 0;
+      background: url('assets/hero-noel.jpg') center center / cover no-repeat;
+      filter: brightness(0.45) saturate(1.2) blur(12px);
+      transform: scale(1.05);
+    }
+    #bg-photo::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 60%, rgba(0,20,60,0.35) 0%, rgba(0,0,15,0.65) 100%);
+    }
+    #fireworks-canvas, #particles-canvas { position: absolute; inset: 0; pointer-events: none; }
+
+    /* ── DEMO BAR ── */
+    .demo-bar {
+      position: relative; z-index: 20;
+      background: rgba(0,48,135,0.85);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      padding: 8px 24px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .demo-bar a { color: #FFD700; font-weight: 700; text-decoration: underline; font-size: 11px; }
+
+    /* ── LAYOUT ── */
+    .scene {
+      position: relative; z-index: 10;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 52px;
+      padding: 28px 24px;
+    }
+
+    /* ── PHONE FRAME ── */
+    .phone {
+      width: 375px;
+      flex-shrink: 0;
+      background: #1a1a1a;
+      border-radius: 50px;
+      padding: 14px;
+      box-shadow:
+        0 0 0 2px #333,
+        0 0 0 4px #111,
+        0 40px 80px rgba(0,0,0,0.8),
+        0 0 60px rgba(0,80,255,0.12);
+    }
+    .phone-screen {
+      background: #fff;
+      border-radius: 40px;
+      overflow: hidden;
+      height: 760px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── STATUS BAR ── */
+    .status-bar {
+      background: #075E54;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 18px 6px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    /* ── WA HEADER ── */
+    .wa-header {
+      background: #075E54;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px 10px;
+      flex-shrink: 0;
+    }
+    .wa-back { color: #fff; font-size: 20px; opacity: 0.9; cursor: pointer; line-height: 1; }
+    .wa-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      overflow: hidden; flex-shrink: 0;
+    }
+    .wa-avatar-inner {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #003087, #0057B8);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .wa-contact { flex: 1; min-width: 0; }
+    .wa-contact-name { font-size: 15px; font-weight: 600; color: #fff; }
+    .wa-contact-status { font-size: 11px; color: rgba(255,255,255,0.75); }
+    .wa-icons { display: flex; gap: 16px; color: rgba(255,255,255,0.9); }
+    .wa-icons svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+    /* ── CHAT AREA (light) ── */
+    .wa-chat {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 10px 10px 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      background-color: #EFEAE2;
+    }
+    .wa-chat::-webkit-scrollbar { width: 3px; }
+    .wa-chat::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 2px; }
+
+    /* ── DATE DIVIDER ── */
+    .chat-date {
+      align-self: center;
+      background: rgba(225,221,216,0.95);
+      color: #667781;
+      font-size: 11.5px;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 6px;
+      margin: 6px 0;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    }
+
+    /* ── MESSAGES ── */
+    .msg { display: flex; flex-direction: column; max-width: 80%; margin-bottom: 1px; flex-shrink: 0; }
+    .msg.bot { align-self: flex-start; }
+    .msg.user { align-self: flex-end; }
+    .msg.hidden { display: none; }
+
+    .bubble {
+      padding: 7px 10px 5px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      line-height: 1.45;
+      position: relative;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+    }
+    .msg.bot .bubble {
+      background: #fff;
+      color: #111;
+      border-top-left-radius: 2px;
+    }
+    .msg.user .bubble {
+      background: #D9FDD3;
+      color: #111;
+      border-top-right-radius: 2px;
+    }
+    .bubble-time {
+      font-size: 10.5px;
+      color: #667781;
+      text-align: right;
+      margin-top: 1px;
+      padding: 0 1px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 2px;
+    }
+    .tick svg { width: 14px; height: 14px; fill: #53BDEB; }
+
+    /* ── TYPING INDICATOR ── */
+    .typing-indicator {
+      align-self: flex-start;
+      background: #fff;
+      border-radius: 8px 8px 8px 2px;
+      padding: 10px 14px;
+      display: none;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+    }
+    .typing-dots { display: flex; gap: 4px; align-items: center; }
+    .typing-dots span {
+      width: 7px; height: 7px; background: #8696A0;
+      border-radius: 50%; animation: dotpulse 1.2s infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dotpulse {
+      0%, 60%, 100% { transform: scale(1); opacity: 0.5; }
+      30% { transform: scale(1.3); opacity: 1; }
+    }
+
+    /* ── QUICK REPLIES (style WA natif) ── */
+    .qr-group {
+      align-self: flex-start;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      margin-top: 2px;
+      width: 84%;
+      flex-shrink: 0;
+    }
+    .qr-btn {
+      background: #fff;
+      border: none;
+      border-top: 1px solid #F0F2F5;
+      color: #009DE2;
+      font-size: 13.5px;
+      font-weight: 500;
+      padding: 10px 14px;
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: background 0.12s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    .qr-btn:first-child { border-radius: 8px 8px 0 0; border-top: none; }
+    .qr-btn:last-child { border-radius: 0 0 8px 8px; }
+    .qr-btn:only-child { border-radius: 8px; }
+    .qr-btn:hover { background: #F0F9FF; }
+
+
+    /* ── PRICE TABLE CARD ── */
+    .price-card {
+      background: #fff;
+      border-radius: 8px;
+      overflow: visible;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+      margin-top: 2px;
+      flex-shrink: 0;
+      width: 84%;
+    }
+    .price-card-header {
+      background: #075E54;
+      padding: 8px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 12px;
+      border-bottom: 1px solid #F0F2F5;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .price-row:hover { background: #F7FFFE; }
+    .price-row:last-child { border-bottom: none; }
+    .price-row.recommended { background: #F0FFF8; }
+    .price-row-label { font-size: 12px; color: #111; font-weight: 500; }
+    .price-row-sub { font-size: 10.5px; color: #667781; margin-top: 1px; }
+    .price-row-badge { font-size: 9.5px; font-weight: 700; color: #fff; background: #FFB800; padding: 1px 5px; border-radius: 3px; display: inline-block; margin-bottom: 2px; }
+    .price-val { font-size: 14px; font-weight: 700; color: #075E54; text-align: right; }
+    .price-val-old { font-size: 10.5px; color: #667781; text-decoration: line-through; text-align: right; }
+    .price-footer {
+      background: #F0F2F5;
+      padding: 7px 12px;
+      font-size: 10.5px;
+      color: #667781;
+      text-align: center;
+    }
+
+    /* ── HOTEL CARD ── */
+    .hotel-card {
+      background: #fff;
+      border-radius: 8px;
+      overflow: visible;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+      margin-top: 2px;
+      flex-shrink: 0;
+      width: 84%;
+    }
+    .hotel-img-placeholder {
+      width: 100%; height: 80px;
+      background: linear-gradient(135deg, #003087 0%, #0057B8 100%);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 2px;
+      color: rgba(255,255,255,0.7); font-size: 10px;
+    }
+    .hotel-img-placeholder span { font-size: 22px; }
+    .hotel-card-body { padding: 9px 12px; }
+    .hotel-name { font-size: 13px; font-weight: 700; color: #111; }
+    .hotel-detail { font-size: 11px; color: #667781; margin-top: 2px; }
+    .hotel-price { margin-top: 5px; display: flex; align-items: baseline; gap: 6px; }
+    .hotel-price-val { font-size: 15px; font-weight: 800; color: #075E54; }
+    .hotel-price-old { font-size: 11px; color: #667781; text-decoration: line-through; }
+    .hotel-price-badge { font-size: 10px; font-weight: 700; background: #DCFCE7; color: #16A34A; padding: 1px 6px; border-radius: 4px; }
+
+    /* ── RECAP CARD ── */
+    .recap-card {
+      background: #fff;
+      border-radius: 8px;
+      overflow: visible;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+      margin-top: 2px;
+      flex-shrink: 0;
+      width: 84%;
+    }
+    .recap-header {
+      background: #25D366;
+      padding: 9px 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .recap-header-title { font-size: 13px; font-weight: 700; color: #fff; }
+    .recap-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-bottom: 1px solid #F0F2F5;
+    }
+    .recap-item-icon { font-size: 16px; flex-shrink: 0; }
+    .recap-item-info { flex: 1; }
+    .recap-item-name { font-size: 12px; font-weight: 600; color: #111; }
+    .recap-item-detail { font-size: 10.5px; color: #667781; margin-top: 1px; }
+    .recap-item-price { font-size: 13px; font-weight: 700; color: #075E54; flex-shrink: 0; }
+    .recap-total {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 12px;
+      background: #F0F2F5;
+    }
+    .recap-total-label { font-size: 12px; font-weight: 700; color: #111; }
+    .recap-total-val { font-size: 16px; font-weight: 900; color: #075E54; }
+    .recap-economy {
+      padding: 5px 12px;
+      background: #DCFCE7;
+      font-size: 10.5px;
+      color: #16A34A;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    /* ── CHECKOUT BUTTON (WA list-reply style natif) ── */
+    .wa-list-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 84%;
+      align-self: center;
+      background: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 11px 14px;
+      margin-top: 2px;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+      text-decoration: none;
+      transition: background 0.12s;
+    }
+    .wa-list-btn:hover { background: #F0F9FF; }
+    .wa-list-btn-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: #DCFCE7;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .wa-list-btn-text { flex: 1; text-align: left; }
+    .wa-list-btn-title { font-size: 13.5px; font-weight: 700; color: #111; }
+    .wa-list-btn-sub { font-size: 11px; color: #667781; margin-top: 1px; }
+    .wa-list-btn-arrow { color: #25D366; font-size: 18px; font-weight: 700; }
+
+    /* ── INPUT BAR ── */
+    .wa-input {
+      background: #F0F2F5;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .wa-input-field {
+      flex: 1;
+      background: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 9px 14px;
+      color: #111;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    }
+    .wa-input-field::placeholder { color: #8696A0; }
+    .wa-input-icons { display: flex; gap: 10px; color: #8696A0; }
+    .wa-input-icons svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; cursor: pointer; }
+    .wa-send-btn {
+      background: #25D366; border-radius: 50%;
+      width: 42px; height: 42px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; cursor: pointer;
+      border: none; transition: background 0.15s;
+    }
+    .wa-send-btn:hover { background: #1DA851; }
+    .wa-send-btn svg { width: 20px; height: 20px; fill: none; stroke: #fff; stroke-width: 2; }
+
+    /* ═══ INFO PANEL ═══ */
+    .info-panel {
+      width: 340px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .info-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(37,211,102,0.12);
+      border: 1px solid rgba(37,211,102,0.3);
+      color: #25D366;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    .info-panel h2 {
+      font-size: 26px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.2;
+    }
+    .info-panel h2 span { color: #25D366; }
+
+    .signal-list { display: flex; flex-direction: column; gap: 10px; }
+    .signal-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+    .signal-icon {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: rgba(37,211,102,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .signal-title { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+    .signal-desc { font-size: 11.5px; color: rgba(255,255,255,0.5); line-height: 1.4; }
+
+    .knowledge-bar {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+    .knowledge-bar-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: rgba(255,255,255,0.4);
+      margin-bottom: 8px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .knowledge-bar-label span { font-size: 16px; font-weight: 900; color: #25D366; }
+    .kb-track { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+    .kb-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #25D366, #128C7E); }
+    .kb-note { font-size: 10.5px; color: rgba(255,255,255,0.3); margin-top: 6px; }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<div id="bg-scene">
+  <div id="bg-photo"></div>
+  <canvas id="fireworks-canvas"></canvas>
+  <canvas id="particles-canvas"></canvas>
+</div>
+
+<div class="demo-bar">
+  <span>🎬 <strong style="color:#FFD700;">Demo Disneyland Paris</strong> — Agentforce Marketing · Data 360</span>
+  <a href="/Disney/Demo_Disney_SIC.html">← Plan de démo</a>
+</div>
+
+<div class="scene">
+
+  <!-- ══ PHONE ══ -->
+  <div class="phone">
+    <div class="phone-screen">
+
+      <div class="status-bar">
+        <span>9:41</span>
+        <span style="display:flex;align-items:center;gap:5px;">
+          <svg width="14" height="10" viewBox="0 0 14 10" fill="white"><rect x="0" y="3" width="2" height="7" rx="1"/><rect x="3" y="2" width="2" height="8" rx="1"/><rect x="6" y="1" width="2" height="9" rx="1"/><rect x="9" y="0" width="2" height="10" rx="1"/></svg>
+          <svg width="14" height="10" viewBox="0 0 20 14" fill="none" stroke="white" stroke-width="1.5"><path d="M1 5C4.5 1.5 15.5 1.5 19 5"/><path d="M4 8.5C6.5 6 13.5 6 16 8.5"/><path d="M7.5 12C9 10.5 11 10.5 12.5 12"/><circle cx="10" cy="14" r="1" fill="white"/></svg>
+          <span style="font-size:11px;">🔋 87%</span>
+        </span>
+      </div>
+
+      <div class="wa-header">
+        <div class="wa-back">‹</div>
+        <div class="wa-avatar"><img src="assets/woody.png" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
+        <div class="wa-contact">
+          <div class="wa-contact-name">Woody · Disneyland Paris</div>
+          <div class="wa-contact-status">🟢 En ligne · Agent officiel</div>
+        </div>
+        <div class="wa-icons">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82 19.79 19.79 0 01.22 1.18 2 2 0 012.22 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 13.92z"/></svg>
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="19" r="1.5" fill="currentColor"/></svg>
+        </div>
+      </div>
+
+      <!-- CHAT -->
+      <div class="wa-chat" id="chat">
+        <div class="chat-date">Aujourd'hui</div>
+
+        <!-- STEP 0 : intro Woody -->
+        <div class="msg bot" id="msg-intro">
+          <div class="bubble">
+            Bonjour ! 🏰✨<br><br>
+            Je suis <strong>Woody</strong>, votre assistant Disneyland Paris. Vous avez vu notre offre <strong>Noël Enchanté</strong> sur Instagram ?<br><br>
+            Je peux vous réserver vos billets en quelques secondes, directement ici 🎄
+          </div>
+          <div class="bubble-time">10:32</div>
+        </div>
+
+        <div class="qr-group" id="qr-intro">
+          <button class="qr-btn" onclick="userReply('🎟️ Oui, je veux réserver !', 'step1')">🎟️ Oui, je veux réserver !</button>
+          <button class="qr-btn" onclick="userReply('📅 Voir les dates et prix', 'step1')">📅 Voir les dates et prix</button>
+          <button class="qr-btn" onclick="userReply('ℹ️ C\'est quoi Noël Enchanté ?', 'step1')">ℹ️ C'est quoi Noël Enchanté ?</button>
+        </div>
+
+        <!-- Typing indicator — anchor for dynamic insertions -->
+        <div class="typing-indicator" id="typing">
+          <div class="typing-dots"><span></span><span></span><span></span></div>
+        </div>
+
+      </div><!-- /chat -->
+
+      <!-- Input bar -->
+      <div class="wa-input">
+        <div class="wa-input-icons">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+        </div>
+        <input class="wa-input-field" id="user-input" placeholder="Message" onkeydown="handleKey(event)">
+        <button class="wa-send-btn" id="send-btn" onclick="handleSend()">
+          <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ INFO PANEL ══ -->
+  <div class="info-panel">
+    <div>
+      <div class="info-tag">ÉTAPE 2 BIS · CONVERSION WHATSAPP</div>
+      <h2>Un ticket acheté<br>sans quitter <span>WhatsApp</span></h2>
+    </div>
+
+    <div class="signal-list">
+      <div class="signal-item">
+        <div class="signal-icon">🎯</div>
+        <div>
+          <div class="signal-title">Déclenchement depuis la pub Instagram</div>
+          <div class="signal-desc">Sophie clique sur la pub → WhatsApp s'ouvre avec Woody. Zéro rebond, zéro création de compte.</div>
+        </div>
+      </div>
+      <div class="signal-item">
+        <div class="signal-icon">⚡</div>
+        <div>
+          <div class="signal-title">Tarifs en temps réel · Data 360</div>
+          <div class="signal-desc">Woody interroge les disponibilités et calcule le meilleur prix famille selon les dates choisies.</div>
+        </div>
+      </div>
+      <div class="signal-item">
+        <div class="signal-icon">🛒</div>
+        <div>
+          <div class="signal-title">Panier composé dans le fil de conversation</div>
+          <div class="signal-desc">Billets + hôtel sélectionnés en 4 échanges. Panier synchronisé avec Data 360 en temps réel.</div>
+        </div>
+      </div>
+      <div class="signal-item">
+        <div class="signal-icon">🔗</div>
+        <div>
+          <div class="signal-title">Checkout en 1 clic · Modèle validé Meta</div>
+          <div class="signal-desc">Lien sécurisé vers site DLP avec panier pré-rempli. Paiement natif WA non disponible en France.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="knowledge-bar">
+      <div class="knowledge-bar-label">
+        Connaissance client
+        <span>40%</span>
+      </div>
+      <div class="kb-track"><div class="kb-fill" style="width:40%;"></div></div>
+      <div class="kb-note">+ Canal WhatsApp opt-in · Intention d'achat confirmée · Profil enrichi Data 360</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ CHAT JS ═══ -->
+<script>
+let selectedDates = '22-23 déc.';
+let selectedPrice = '460';
+let withHotel = true;
+let currentStep = 'intro';
+let activeQRGroup = null; // ref to current QR group node so we can remove it
+
+function nowTime() {
+  const d = new Date();
+  return d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+
+function showTyping() {
+  document.getElementById('typing').style.display = 'block';
+  scrollChat();
+}
+function hideTyping() {
+  document.getElementById('typing').style.display = 'none';
+}
+function scrollChat() {
+  const c = document.getElementById('chat');
+  setTimeout(() => { c.scrollTop = c.scrollHeight; }, 60);
+}
+
+/* Insert any element just before the typing indicator */
+function insertNode(el) {
+  document.getElementById('typing').before(el);
+}
+
+function appendUserMsg(text) {
+  const t = nowTime();
+  const div = document.createElement('div');
+  div.className = 'msg user';
+  div.innerHTML = `<div class="bubble">${text}</div><div class="bubble-time">${t} <span class="tick"><svg viewBox="0 0 16 11"><path d="M11.07.73L5.24 7.8 2.3 4.86.89 6.27l4.35 4.35L12.5 2.14z" fill="#53BDEB"/><path d="M15.07.73L9.24 7.8l-1.1-1.25L9.5 5.14l5.07-5.86L15.93.7z" fill="#53BDEB"/></svg></span></div>`;
+  insertNode(div);
+  scrollChat();
+}
+
+function appendBotMsg(html) {
+  const t = nowTime();
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.innerHTML = `<div class="bubble">${html}</div><div class="bubble-time">${t}</div>`;
+  insertNode(div);
+  scrollChat();
+}
+
+/* Remove current QR group from DOM */
+function removeActiveQR() {
+  if (activeQRGroup && activeQRGroup.parentNode) {
+    activeQRGroup.parentNode.removeChild(activeQRGroup);
+  }
+  // also remove the static intro QR if still there
+  const intro = document.getElementById('qr-intro');
+  if (intro && intro.parentNode) intro.parentNode.removeChild(intro);
+  activeQRGroup = null;
+}
+
+/* Create & insert a QR group, return the node */
+function appendQRGroup(buttons) {
+  removeActiveQR();
+  const grp = document.createElement('div');
+  grp.className = 'qr-group';
+  buttons.forEach(({label, cb}) => {
+    const btn = document.createElement('button');
+    btn.className = 'qr-btn';
+    btn.textContent = label;
+    btn.onclick = cb;
+    grp.appendChild(btn);
+  });
+  insertNode(grp);
+  activeQRGroup = grp;
+  scrollChat();
+  return grp;
+}
+
+/* ── STEP 1 : Woody asks for dates ── */
+function showStep1() {
+  appendBotMsg('Parfait ! 🎉 Pour trouver les meilleures offres, quelles dates vous intéressent ? 📅<br><br>Tapez librement — exemple : <em>"22-23 décembre"</em> ou <em>"fin décembre, 2 jours"</em>');
+  currentStep = 'dates';
+}
+
+/* ── STEP 2 : price table after Sophie types dates ── */
+function showPriceTable(dateLabel) {
+  selectedDates = dateLabel;
+
+  appendBotMsg(`J'ai trouvé les meilleures fenêtres autour du ${dateLabel} 📊`);
+
+  // Build price table card
+  const card = document.createElement('div');
+  card.className = 'price-card';
+  card.innerHTML = `
+    <div class="price-card-header">⚡ Meilleurs prix — 4 billets 2 jours · 2 Parcs</div>
+    <div class="price-row" onclick="selectDate('18-19 déc.', '420')">
+      <div>
+        <div class="price-row-label">🗓 18–19 déc. 2026</div>
+        <div class="price-row-sub">Avant Noël · Moins fréquenté</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="price-val">420 €</div>
+        <div class="price-row-sub">Prix le plus bas</div>
+      </div>
+    </div>
+    <div class="price-row recommended" onclick="selectDate('22-23 déc.', '460')">
+      <div>
+        <div class="price-row-badge">⭐ RECOMMANDÉ</div>
+        <div class="price-row-label">🗓 22–23 déc. 2026</div>
+        <div class="price-row-sub">Noël Enchanté · Parade + spectacle inclus</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="price-val-old">520 €</div>
+        <div class="price-val">460 €</div>
+        <div class="price-row-sub" style="color:#16A34A;">−11% famille</div>
+      </div>
+    </div>
+    <div class="price-row" onclick="selectDate('27-28 déc.', '580')">
+      <div>
+        <div class="price-row-label">🗓 27–28 déc. 2026</div>
+        <div class="price-row-sub">Entre Noël et Nouvel An · Très demandé</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="price-val" style="color:#F59E0B;">580 €</div>
+        <div class="price-row-sub" style="color:#F59E0B;">Forte demande</div>
+      </div>
+    </div>
+    <div class="price-footer">Appuyez sur une date pour la sélectionner</div>
+  `;
+  insertNode(card);
+  currentStep = 'price';
+  scrollChat();
+}
+
+/* ── STEP 3 : after date selection, ask hotel ── */
+function selectDate(dateLabel, price) {
+  selectedDates = dateLabel;
+  selectedPrice = price;
+
+  // Remove the price card
+  const allCards = document.querySelectorAll('.price-card');
+  allCards.forEach(c => c.parentNode && c.parentNode.removeChild(c));
+
+  appendUserMsg(`✅ Je prends le ${dateLabel} — ${price} €`);
+  showTyping();
+
+  setTimeout(() => {
+    hideTyping();
+    appendBotMsg(`Excellent choix pour le ${dateLabel} ! 🌟 Vous dormez sur place ou vous rentrez chaque soir ?`);
+    appendQRGroup([
+      { label: "🏨 Ajouter une nuit d'hôtel", cb: () => userReply("🏨 Je veux ajouter une nuit d'hôtel", 'step4') },
+      { label: "🎟️ Billets seulement",       cb: () => userReply('🎟️ Billets seulement', 'step5b') }
+    ]);
+    currentStep = 'hotel';
+    scrollChat();
+  }, 1300);
+}
+
+/* ── STEP 4 : propose hotel ── */
+function showHotelCard() {
+  appendBotMsg('Parfait ! J\'ai une offre hôtel exclusive pour les familles qui réservent avec moi 🏨✨<br><br>Je vous recommande le <strong>Disney Hotel New York – The Art of Marvel ★★★★</strong>, à 2 min des parcs. Dispo pour votre séjour du 22 au 24 déc. à partir de <strong>988 €</strong> (−10%).');
+
+  appendQRGroup([
+    { label: "🏨 En savoir plus sur cet hôtel",  cb: () => userReply("C'est bien cet hôtel ? Il y a une piscine pour les enfants ?", 'step4b') },
+    { label: "✅ Je l'ajoute directement",        cb: () => userReply("✅ Je l'ajoute directement", 'step5') },
+    { label: "❌ Non merci, billets seulement",   cb: () => userReply('Non merci, billets seulement', 'step5b') }
+  ]);
+  currentStep = 'hotel-confirm';
+  scrollChat();
+}
+
+/* ── STEP 4b : Sophie pose une question, Woody répond avec la photo ── */
+function showHotelDetails() {
+  appendBotMsg('Excellente question ! 🌟 L\'Hôtel New York est idéal pour les familles avec enfants :');
+
+  const card = document.createElement('div');
+  card.className = 'hotel-card';
+  card.innerHTML = `
+    <img src="assets/hotel-new-york.jpg" style="width:100%;height:130px;object-fit:cover;border-radius:8px 8px 0 0;display:block;">
+    <div class="hotel-card-body">
+      <div class="hotel-name">Disney Hotel New York ★★★★</div>
+      <div class="hotel-detail">
+        🏊 Piscine couverte · 🎨 Galerie Marvel interactive<br>
+        🍳 Petit-déjeuner Disney inclus · 🎢 Accès anticipé 30 min<br>
+        📍 2 min à pied des parcs · Navette incluse
+      </div>
+      <div class="hotel-price">
+        <div class="hotel-price-val">988 €</div>
+        <div class="hotel-price-old">1 098 €</div>
+        <div class="hotel-price-badge">−10%</div>
+      </div>
+    </div>
+  `;
+  insertNode(card);
+
+  setTimeout(() => {
+    appendBotMsg('Oui, il y a bien une piscine couverte chauffée — parfait pour Noël ! 🏊‍♀️<br>Je vous confirme la disponibilité pour le 22→24 déc. Je l\'ajoute à votre panier ?');
+    appendQRGroup([
+      { label: "✅ Oui, j'ajoute l'hôtel New York !", cb: () => userReply("✅ Parfait, j'ajoute l'hôtel !", 'step5') },
+      { label: "❌ Non merci, billets seulement",     cb: () => userReply('Non merci, billets seulement', 'step5b') }
+    ]);
+    currentStep = 'hotel-confirm2';
+    scrollChat();
+  }, 1200);
+  scrollChat();
+}
+
+/* ── STEP 5 : recap + checkout ── */
+function triggerRecap(hotel) {
+  removeActiveQR();
+
+  appendBotMsg('Voici votre panier — tout est prêt pour finaliser en un clic 🎉');
+
+  const eco = parseInt(selectedPrice) === 460 ? 170 : 110;
+  const total = hotel ? parseInt(selectedPrice) + 988 : parseInt(selectedPrice);
+  const hotelRow = hotel ? `
+    <div class="recap-item">
+      <div class="recap-item-icon">🏨</div>
+      <div class="recap-item-info">
+        <div class="recap-item-name">Hôtel New York ★★★★</div>
+        <div class="recap-item-detail">22→24 déc. · 1 nuit · Petit-déj. inclus</div>
+      </div>
+      <div class="recap-item-price">988 €</div>
+    </div>` : '';
+  const ecoMsg = hotel
+    ? `🎉 Vous économisez ${eco} € grâce à votre offre personnalisée`
+    : '✅ Offre famille appliquée automatiquement';
+
+  const recap = document.createElement('div');
+  recap.className = 'recap-card';
+  recap.innerHTML = `
+    <div class="recap-header">
+      <span>🛒</span>
+      <div class="recap-header-title">Panier · Noël Enchanté 2026</div>
+    </div>
+    <div class="recap-item">
+      <div class="recap-item-icon">🎟️</div>
+      <div class="recap-item-info">
+        <div class="recap-item-name">Billets datés · 2 Parcs</div>
+        <div class="recap-item-detail">${selectedDates} · 2 adultes + 2 enfants · 2 jours</div>
+      </div>
+      <div class="recap-item-price">${selectedPrice} €</div>
+    </div>
+    ${hotelRow}
+    <div class="recap-total">
+      <div class="recap-total-label">Total</div>
+      <div class="recap-total-val">${total.toLocaleString('fr-FR')} €</div>
+    </div>
+    <div class="recap-economy">${ecoMsg}</div>
+  `;
+  insertNode(recap);
+
+  // Checkout button
+  const btn = document.createElement('a');
+  btn.href = 'cart.html';
+  btn.className = 'wa-list-btn';
+  btn.innerHTML = `
+    <div class="wa-list-btn-icon">🏰</div>
+    <div class="wa-list-btn-text">
+      <div class="wa-list-btn-title">Finaliser ma réservation</div>
+      <div class="wa-list-btn-sub">Paiement sécurisé · Annulation gratuite jusqu'au 15 déc.</div>
+    </div>
+    <div class="wa-list-btn-arrow">›</div>
+  `;
+  insertNode(btn);
+  scrollChat();
+
+  setTimeout(() => {
+    appendBotMsg('Votre panier est sauvegardé 💾 — vous avez <strong>48h</strong> pour finaliser au même tarif.<br><br>À très bientôt à Disneyland Paris ! 🏰✨🎄');
+    currentStep = 'done';
+    scrollChat();
+  }, 1500);
+}
+
+function userReply(text, nextStep) {
+  removeActiveQR();
+  appendUserMsg(text);
+  showTyping();
+
+  setTimeout(() => {
+    hideTyping();
+    if (nextStep === 'step1') {
+      showStep1();
+    } else if (nextStep === 'step4') {
+      withHotel = true;
+      showHotelCard();
+    } else if (nextStep === 'step4b') {
+      showHotelDetails();
+    } else if (nextStep === 'step5') {
+      withHotel = true;
+      triggerRecap(true);
+    } else if (nextStep === 'step5b') {
+      withHotel = false;
+      triggerRecap(false);
+    }
+    scrollChat();
+  }, 1200);
+}
+
+function handleSend() {
+  const input = document.getElementById('user-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  updateSendBtn('');
+
+  appendUserMsg(text);
+  showTyping();
+
+  const lower = text.toLowerCase();
+
+  if (currentStep === 'intro') {
+    setTimeout(() => {
+      hideTyping();
+      removeActiveQR();
+      showStep1();
+      scrollChat();
+    }, 1200);
+    return;
+  } else if (currentStep === 'dates') {
+    setTimeout(() => {
+      hideTyping();
+      showPriceTable(text);
+    }, 1000);
+    return;
+  }
+
+  let response = '';
+  if (lower.includes('merci') || lower.includes('parfait') || lower.includes('super') || lower.includes('genial')) {
+    response = 'Avec plaisir ! 😊 À très bientôt à Disneyland Paris 🏰🎄';
+  } else if (lower.includes('prix') || lower.includes('tarif') || lower.includes('cher')) {
+    response = 'Les tarifs que je vous propose sont les meilleurs disponibles pour votre famille, calculés en temps réel 🎯';
+  } else if (lower.includes('annul') || lower.includes('remboursable')) {
+    response = "Oui ! Les billets sont remboursables jusqu'à 3 jours avant votre visite, et l'hôtel jusqu'au 15 décembre. Aucun risque 🛡️";
+  } else if (lower.includes('coupe') || lower.includes('fastpass') || lower.includes('file')) {
+    response = 'Le pack Coupe-File peut s\'ajouter — je vous le proposerai lors de votre visite pour gagner encore plus de temps sur les attractions phares 🎢✨';
+  } else {
+    response = 'Je suis là pour vous aider à préparer votre séjour de rêve ! Des questions sur les billets, l\'hôtel ou les activités ? 🏰';
+  }
+
+  setTimeout(() => {
+    hideTyping();
+    appendBotMsg(response);
+    scrollChat();
+  }, 1300);
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter') handleSend();
+}
+
+function updateSendBtn(val) {
+  const btn = document.getElementById('send-btn');
+  if (val.trim()) {
+    btn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>';
+  } else {
+    btn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg>';
+  }
+}
+
+document.getElementById('user-input').addEventListener('input', function() {
+  updateSendBtn(this.value);
+});
+</script>
+
+<!-- ═══ BACKGROUND ANIMATIONS ═══ -->
+<script>
+(function() {
+  const pc = document.getElementById('particles-canvas');
+  const pctx = pc.getContext('2d');
+  const fc = document.getElementById('fireworks-canvas');
+  const fctx = fc.getContext('2d');
+
+  function resize() {
+    pc.width = window.innerWidth; pc.height = window.innerHeight;
+    fc.width = window.innerWidth; fc.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // PARTICLES
+  let particles = [];
+  function mkParticle() {
+    return {
+      x: Math.random() * pc.width, y: pc.height + 10,
+      vx: (Math.random() - 0.5) * 0.6, vy: -(Math.random() * 0.8 + 0.3),
+      size: Math.random() * 2.5 + 0.5,
+      alpha: Math.random() * 0.6 + 0.2,
+      color: Math.random() < 0.6
+        ? `hsl(${42 + Math.random()*20},100%,${60 + Math.random()*20}%)`
+        : `hsl(${200 + Math.random()*40},80%,${70 + Math.random()*20}%)`,
+      life: 0, maxLife: Math.random() * 200 + 150
+    };
+  }
+  for (let i = 0; i < 80; i++) {
+    const p = mkParticle();
+    p.y = Math.random() * pc.height;
+    p.life = Math.random() * p.maxLife;
+    particles.push(p);
+  }
+  function animP() {
+    pctx.clearRect(0, 0, pc.width, pc.height);
+    if (particles.length < 100) particles.push(mkParticle());
+    particles = particles.filter(p => p.life < p.maxLife);
+    for (const p of particles) {
+      p.x += p.vx; p.y += p.vy; p.life++;
+      const fade = p.life < 30 ? p.life/30 : p.life > p.maxLife-30 ? (p.maxLife-p.life)/30 : 1;
+      pctx.globalAlpha = p.alpha * fade;
+      pctx.fillStyle = p.color;
+      pctx.beginPath(); pctx.arc(p.x, p.y, p.size, 0, Math.PI*2); pctx.fill();
+    }
+    pctx.globalAlpha = 1;
+    requestAnimationFrame(animP);
+  }
+  animP();
+
+  // FIREWORKS
+  let rockets = [], bursts = [];
+  function launchFirework() {
+    rockets.push({
+      x: fc.width * (0.2 + Math.random() * 0.6),
+      y: fc.height * 0.85,
+      targetY: fc.height * (0.05 + Math.random() * 0.35),
+      get vy() { return -(fc.height * 0.85 - this.targetY) / 50; }
+    });
+  }
+  function explode(x, y) {
+    const hue = Math.random() * 360;
+    const count = 60 + Math.floor(Math.random() * 40);
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count;
+      const speed = Math.random() * 3.5 + 1;
+      bursts.push({
+        x, y, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed,
+        alpha: 1, color: `hsl(${hue + Math.random()*30},100%,${55 + Math.random()*20}%)`,
+        size: Math.random()*2.5+0.5
+      });
+    }
+  }
+  function animF() {
+    fctx.clearRect(0, 0, fc.width, fc.height);
+    const toExplode = [];
+    rockets = rockets.filter(r => {
+      r.y += r.vy;
+      fctx.globalAlpha = 0.9; fctx.fillStyle = '#fff';
+      fctx.beginPath(); fctx.arc(r.x, r.y, 2, 0, Math.PI*2); fctx.fill();
+      if (r.y <= r.targetY) { toExplode.push([r.x, r.y]); return false; }
+      return true;
+    });
+    toExplode.forEach(([x, y]) => explode(x, y));
+    bursts = bursts.filter(b => b.alpha > 0.02);
+    for (const b of bursts) {
+      b.x += b.vx; b.y += b.vy; b.vy += 0.06; b.vx *= 0.98; b.alpha -= 0.018;
+      fctx.globalAlpha = b.alpha; fctx.fillStyle = b.color;
+      fctx.beginPath(); fctx.arc(b.x, b.y, b.size, 0, Math.PI*2); fctx.fill();
+    }
+    fctx.globalAlpha = 1;
+    requestAnimationFrame(animF);
+  }
+  animF();
+
+  function scheduleBurst() {
+    const count = 2 + Math.floor(Math.random() * 2);
+    for (let i = 0; i < count; i++) setTimeout(launchFirework, i * 300);
+    setTimeout(scheduleBurst, 7000 + Math.random() * 4000);
+  }
+  setTimeout(scheduleBurst, 1500);
+})();
+</script>
+
+</body>
+</html>

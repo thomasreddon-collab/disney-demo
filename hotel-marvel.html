@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disney Hotel New York — The Art of Marvel | Disneyland Paris</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Arial', sans-serif; color: #1a1a2e; background: #fff; }
+
+    /* ── HEADER ── */
+    .site-header { background: #003087; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 100; }
+    .header-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .header-logo svg { flex-shrink: 0; }
+    .header-nav { display: flex; gap: 20px; align-items: center; }
+    .header-nav a { color: rgba(255,255,255,0.85); font-size: 13px; text-decoration: none; }
+    .header-nav a:hover { color: #fff; }
+    .header-cta { background: #FFD700; color: #003087 !important; font-weight: 700; padding: 8px 16px; border-radius: 20px; font-size: 13px; }
+    .header-cart { background: #e53935; color: #fff !important; font-weight: 700; padding: 8px 16px; border-radius: 20px; font-size: 13px; display: flex; align-items: center; gap: 6px; }
+    .header-cart:hover { background: #c62828 !important; }
+    .header-cart-badge { background: #FFD700; color: #003087; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
+
+    /* ── HERO ── */
+    .hotel-hero { position: relative; height: 520px; overflow: hidden; }
+    .hotel-hero__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .hotel-hero__overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%); }
+    .hotel-hero__content { position: absolute; bottom: 48px; left: 0; right: 0; padding: 0 40px; color: #fff; }
+    .hotel-hero__eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.75); margin-bottom: 10px; }
+    .hotel-hero__title { font-size: 42px; font-weight: 900; line-height: 1.1; margin-bottom: 12px; text-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+    .hotel-hero__stars { color: #FFD700; font-size: 22px; margin-bottom: 14px; letter-spacing: 2px; }
+    .hotel-hero__badges { display: flex; gap: 10px; flex-wrap: wrap; }
+    .hero-badge { background: rgba(255,255,255,0.15); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+    .hero-badge--gold { background: #FFD700; color: #003087; border-color: #FFD700; }
+
+    /* ── BOOKING BAR ── */
+    .booking-bar { background: #fff; border-bottom: 2px solid #e5e7eb; padding: 16px 40px; display: flex; align-items: center; gap: 16px; position: sticky; top: 60px; z-index: 99; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .booking-bar__price { font-size: 24px; font-weight: 900; color: #003087; }
+    .booking-bar__from { font-size: 12px; color: #777; margin-bottom: 2px; }
+    .booking-bar__per { font-size: 12px; color: #777; }
+    .booking-bar__old { text-decoration: line-through; color: #aaa; font-size: 16px; margin-right: 6px; }
+    .booking-bar__new { color: #e53935; font-weight: 900; }
+    .btn-blue { background: #003087; color: #fff; border: none; border-radius: 24px; padding: 12px 28px; font-size: 15px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; transition: background .2s; }
+    .btn-blue:hover { background: #002270; }
+    .btn-blue--lg { padding: 14px 36px; font-size: 16px; }
+    .btn-outline { background: transparent; color: #003087; border: 2px solid #003087; border-radius: 24px; padding: 11px 24px; font-size: 14px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; }
+    .booking-bar__sep { flex: 1; }
+
+    /* ── CONTAINER ── */
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── GALLERY ── */
+    .gallery { padding: 40px 40px 0; max-width: 1160px; margin: 0 auto; }
+    .gallery__grid { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 200px 200px; gap: 8px; border-radius: 16px; overflow: hidden; }
+    .gallery__item { overflow: hidden; }
+    .gallery__item:first-child { grid-row: 1 / 3; }
+    .gallery__img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .4s; cursor: pointer; }
+    .gallery__img:hover { transform: scale(1.04); }
+
+    /* ── CONTENT LAYOUT ── */
+    .hotel-content { display: grid; grid-template-columns: 1fr 360px; gap: 48px; padding: 48px 40px; max-width: 1160px; margin: 0 auto; }
+
+    /* ── LEFT COLUMN ── */
+    .hotel-section { margin-bottom: 48px; }
+    .hotel-section__title { font-size: 22px; font-weight: 800; color: #003087; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #e5e7eb; }
+    .hotel-desc { font-size: 16px; line-height: 1.7; color: #444; }
+    .hotel-desc p { margin-bottom: 14px; }
+
+    /* Highlights */
+    .highlights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .highlight-item { display: flex; align-items: flex-start; gap: 12px; padding: 14px; background: #f8f9ff; border-radius: 10px; }
+    .highlight-icon { font-size: 24px; flex-shrink: 0; }
+    .highlight-body { }
+    .highlight-title { font-size: 14px; font-weight: 700; color: #003087; margin-bottom: 3px; }
+    .highlight-text { font-size: 13px; color: #666; }
+
+    /* Amenities */
+    .amenities-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .amenity-item { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #444; }
+    .amenity-item::before { content: '✓'; color: #10b981; font-weight: 700; flex-shrink: 0; }
+
+    /* Photos section */
+    .photos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .photo-item { border-radius: 10px; overflow: hidden; aspect-ratio: 4/3; }
+    .photo-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s; }
+    .photo-item img:hover { transform: scale(1.04); }
+    .photo-label { font-size: 12px; color: #888; text-align: center; margin-top: 6px; }
+
+    /* Reviews */
+    .reviews-grid { display: flex; flex-direction: column; gap: 16px; }
+    .review-item { background: #f8f9ff; border-radius: 10px; padding: 16px; }
+    .review-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .review-name { font-size: 14px; font-weight: 700; color: #003087; }
+    .review-stars { color: #FFD700; font-size: 14px; }
+    .review-date { font-size: 12px; color: #aaa; }
+    .review-text { font-size: 14px; color: #555; line-height: 1.6; }
+
+    /* ── RIGHT COLUMN (sticky booking) ── */
+    .booking-card { background: #fff; border: 2px solid #e5e7eb; border-radius: 16px; padding: 28px; position: sticky; top: 124px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+    .booking-card__title { font-size: 18px; font-weight: 800; color: #003087; margin-bottom: 20px; }
+    .booking-card__price-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+    .booking-card__old { text-decoration: line-through; color: #bbb; font-size: 18px; }
+    .booking-card__new { font-size: 32px; font-weight: 900; color: #e53935; }
+    .booking-card__per { font-size: 13px; color: #777; }
+    .booking-card__discount { background: #e53935; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 10px; display: inline-block; margin-bottom: 20px; }
+    .booking-field { margin-bottom: 14px; }
+    .booking-field label { display: block; font-size: 12px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .booking-field select, .booking-field input { width: 100%; border: 1.5px solid #d1d5db; border-radius: 8px; padding: 10px 12px; font-size: 14px; color: #222; background: #fff; }
+    .booking-field select:focus, .booking-field input:focus { outline: none; border-color: #003087; }
+    .booking-card__total { background: #f8f9ff; border-radius: 8px; padding: 14px; margin: 18px 0; }
+    .booking-card__total-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; color: #555; }
+    .booking-card__total-row strong { color: #003087; font-size: 15px; }
+    .booking-card__reserve { width: 100%; margin-top: 4px; }
+    .booking-card__guarantee { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #888; margin-top: 12px; text-align: center; justify-content: center; }
+    .booking-card__included { margin-top: 16px; padding-top: 16px; border-top: 1px solid #e5e7eb; }
+    .included-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #555; margin-bottom: 10px; }
+    .included-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #444; margin-bottom: 7px; }
+    .included-item::before { content: '✓'; color: #10b981; font-weight: 700; flex-shrink: 0; }
+
+    /* ── DC TOGGLE ── */
+    .dc-toggle { position: fixed; top: 50%; right: 0; transform: translateY(-50%); background: #0070D2; color: #fff; border: none; border-radius: 6px 0 0 6px; padding: 12px 8px; cursor: pointer; z-index: 999; writing-mode: vertical-rl; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; transition: background .2s; }
+    .dc-toggle:hover { background: #005fb2; }
+
+    /* ── CHAT WIDGET ── */
+    .chat-widget { position: fixed; bottom: 24px; right: 24px; z-index: 1000; }
+    .chat-window { display: none; position: absolute; bottom: 72px; right: 0; width: 340px; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.18); overflow: hidden; flex-direction: column; }
+    .chat-window.open { display: flex; }
+    .chat-header { background: #003087; color: #fff; padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
+    .chat-header__name { font-size: 14px; font-weight: 700; }
+    .chat-header__status { font-size: 11px; color: rgba(255,255,255,0.7); }
+    .chat-header__close { margin-left: auto; background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 18px; }
+    .chat-messages { height: 280px; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .chat-msg { display: flex; gap: 8px; align-items: flex-start; max-width: 88%; }
+    .chat-msg--bot { align-self: flex-start; }
+    .chat-msg--user { align-self: flex-end; flex-direction: row-reverse; }
+    .chat-msg__bubble { border-radius: 12px; padding: 10px 14px; font-size: 14px; line-height: 1.5; }
+    .chat-msg--bot .chat-msg__bubble { background: #fff; color: #222; border: 1px solid #e5e7eb; border-bottom-left-radius: 2px; }
+    .chat-msg--user .chat-msg__bubble { background: #003087; color: #fff; border-bottom-right-radius: 2px; }
+    .chat-msg__avatar { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .chat-followup { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 0; }
+    .chat-followup__btn { background: #f1f5f9; border: 1px solid #d1d5db; border-radius: 16px; padding: 6px 12px; font-size: 12px; cursor: pointer; }
+    .chat-followup__btn:hover { background: #003087; color: #fff; border-color: #003087; }
+    .chat-input-area { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-top: 1px solid #e5e7eb; }
+    .chat-input { flex: 1; border: 1.5px solid #e5e7eb; border-radius: 20px; padding: 8px 14px; font-size: 13px; outline: none; }
+    .chat-send { background: #003087; color: #fff; border: none; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .chat-disclaimer { font-size: 10px; color: #aaa; text-align: center; padding: 6px 0; }
+    .chat-trigger { background: #003087; border: none; border-radius: 50%; width: 60px; height: 60px; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; position: relative; }
+    .chat-badge { display: none; }
+    .chat-bubble { position: absolute; bottom: 68px; right: 0; background: #fff; color: #003087; font-size: 12px; font-weight: 700; padding: 8px 12px; border-radius: 12px 12px 2px 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.18); white-space: nowrap; pointer-events: none; border: 1.5px solid #e5e7eb; }
+    .chat-bubble::after { content: ''; position: absolute; bottom: -8px; right: 14px; border: 6px solid transparent; border-top-color: #fff; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1)); }
+    .chat-typing span { display: inline-block; width: 8px; height: 8px; background: #94a3b8; border-radius: 50%; margin: 0 2px; animation: bounce 1.2s infinite; }
+    .chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,80%,100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+    /* ── FOOTER ── */
+    .mini-footer { background: #003087; color: rgba(255,255,255,0.6); text-align: center; padding: 20px; font-size: 12px; margin-top: 80px; }
+    .mini-footer a { color: rgba(255,255,255,0.5); }
+
+    @media (max-width: 900px) {
+      .hotel-content { grid-template-columns: 1fr; }
+      .hotel-hero__title { font-size: 28px; }
+      .gallery__grid { grid-template-columns: 1fr 1fr; grid-template-rows: 180px 180px; }
+      .gallery__item:first-child { grid-column: 1 / 3; grid-row: 1; }
+      .booking-card { position: static; }
+      .booking-bar { padding: 12px 20px; flex-wrap: wrap; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="site-header">
+  <a href="index.html" class="header-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 54" height="32" width="120">
+      <defs>
+        <linearGradient id="dlpG" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#3BB5E8"/>
+          <stop offset="50%" style="stop-color:#fff"/>
+          <stop offset="100%" style="stop-color:#FFD700"/>
+        </linearGradient>
+      </defs>
+      <text x="4" y="42" font-family="Georgia,serif" font-size="48" font-weight="900" font-style="italic" fill="url(#dlpG)">D</text>
+      <text x="38" y="28" font-family="Georgia,serif" font-size="17" font-weight="700" font-style="italic" fill="url(#dlpG)">isneyland</text>
+      <text x="38" y="46" font-family="Arial,sans-serif" font-size="12" font-weight="900" letter-spacing="4" fill="url(#dlpG)">PARIS</text>
+    </svg>
+  </a>
+  <nav class="header-nav">
+    <a href="index.html">Accueil</a>
+    <a href="hotels.html">Hôtels</a>
+    <a href="coupe-file.html">Coupe-file</a>
+    <a href="configure2.html" class="header-cta">Configurer mon séjour</a>
+    <a href="cart.html" class="header-cart" id="header-cart-btn">🛒 <span class="header-cart-badge" id="cart-count">2</span></a>
+  </nav>
+</header>
+
+<!-- ===== HERO ===== -->
+<div class="hotel-hero">
+  <img class="hotel-hero__img" src="https://images.unsplash.com/photo-1784411641863-d163d776ed55?w=1600&q=85" alt="Disney Hotel New York — The Art of Marvel">
+  <div class="hotel-hero__overlay"></div>
+  <div class="hotel-hero__content">
+    <div class="hotel-hero__eyebrow">Hôtel 4 étoiles · Disneyland Paris</div>
+    <h1 class="hotel-hero__title">Disney Hotel New York<br>The Art of Marvel</h1>
+    <div class="hotel-hero__stars">★★★★</div>
+    <div class="hotel-hero__badges">
+      <span class="hero-badge">📍 10 min. des Parcs à pied</span>
+      <span class="hero-badge">🚌 Navette gratuite</span>
+      <span class="hero-badge hero-badge--gold">⚡ Coupe-file disponible</span>
+      <span class="hero-badge">🏊 Piscine intérieure</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BOOKING BAR ===== -->
+<div class="booking-bar">
+  <div>
+    <div class="booking-bar__from">À partir de</div>
+    <div class="booking-bar__price">
+      <span class="booking-bar__old">549 €</span>
+      <span class="booking-bar__new">494 €</span>
+    </div>
+    <div class="booking-bar__per">/ nuit · famille 4 pers. · Noël 2026</div>
+  </div>
+  <div class="booking-bar__sep"></div>
+  <a href="configure2.html" class="btn-blue btn-blue--lg">Réserver cet hôtel</a>
+  <a href="#booking-card" class="btn-outline">Voir les disponibilités</a>
+</div>
+
+<!-- ===== PHOTO GALLERY ===== -->
+<div class="gallery">
+  <div class="gallery__grid">
+    <div class="gallery__item">
+      <img class="gallery__img" src="https://images.unsplash.com/photo-1784411641863-d163d776ed55?w=800&q=80" alt="Façade hôtel">
+    </div>
+    <div class="gallery__item">
+      <img class="gallery__img" src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80" alt="Chambre Marvel">
+    </div>
+    <div class="gallery__item">
+      <img class="gallery__img" src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&q=80" alt="Piscine intérieure">
+    </div>
+    <div class="gallery__item">
+      <img class="gallery__img" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" alt="Restaurant">
+    </div>
+    <div class="gallery__item">
+      <img class="gallery__img" src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80" alt="Lobby">
+    </div>
+  </div>
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="hotel-content">
+  <!-- LEFT COLUMN -->
+  <div>
+
+    <!-- Description -->
+    <div class="hotel-section">
+      <h2 class="hotel-section__title">L'hôtel des Super Héros</h2>
+      <div class="hotel-desc">
+        <p>Bienvenue dans le monde de Marvel ! Le <strong>Disney Hotel New York — The Art of Marvel</strong> est le premier hôtel au monde entièrement dédié à l'art Marvel. Plus de <strong>350 œuvres originales</strong> ornent ses couloirs, ses chambres et ses espaces communs — des tableaux, des sculptures et des installations créées spécialement pour l'hôtel.</p>
+        <p>Situé à seulement <strong>10 minutes à pied</strong> des Parcs Disneyland, avec une <strong>navette gratuite</strong> toutes les 15 minutes, l'hôtel offre également un <strong>accès prioritaire aux Parcs</strong> avant l'ouverture officielle — jusqu'à 30 minutes d'avance, pour profiter des meilleures attractions sans files d'attente.</p>
+        <p>Pour Noël 2026, des décorations féeriques et des animations spéciales sont prévues tout au long du séjour. Vos enfants pourront rencontrer leurs héros Marvel en tenue de Noël directement dans le lobby de l'hôtel.</p>
+      </div>
+    </div>
+
+    <!-- Highlights -->
+    <div class="hotel-section">
+      <h2 class="hotel-section__title">Points forts de l'hôtel</h2>
+      <div class="highlights-grid">
+        <div class="highlight-item">
+          <div class="highlight-icon">🏊</div>
+          <div class="highlight-body">
+            <div class="highlight-title">Piscine intérieure chauffée</div>
+            <div class="highlight-text">Ouverte toute l'année, idéale même en hiver. Espace enfants séparé et cours de natation sur réservation.</div>
+          </div>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-icon">⚡</div>
+          <div class="highlight-body">
+            <div class="highlight-title">Coupe-file en option</div>
+            <div class="highlight-text">Ajoutez 2 coupe-files par jour et par personne — accès direct aux meilleures attractions sans attente.</div>
+          </div>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-icon">🎨</div>
+          <div class="highlight-body">
+            <div class="highlight-title">350+ œuvres Marvel originales</div>
+            <div class="highlight-text">Une galerie d'art vivante — Iron Man, Captain America, Spider-Man dans tout l'hôtel.</div>
+          </div>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-icon">🌅</div>
+          <div class="highlight-body">
+            <div class="highlight-title">Accès anticipé aux Parcs</div>
+            <div class="highlight-text">Entrez dans les Parcs 30 min. avant l'ouverture officielle — un avantage exclusif réservés aux clients hôtel.</div>
+          </div>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-icon">🦸</div>
+          <div class="highlight-body">
+            <div class="highlight-title">Rencontres personnages Marvel</div>
+            <div class="highlight-text">Petit-déjeuner avec les héros Marvel à l'hôtel — photos et dédicaces incluses.</div>
+          </div>
+        </div>
+        <div class="highlight-item">
+          <div class="highlight-icon">🚌</div>
+          <div class="highlight-body">
+            <div class="highlight-title">Navette gratuite</div>
+            <div class="highlight-text">Service de navette entre l'hôtel et les Parcs toutes les 15 minutes — 7h–23h.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Équipements -->
+    <div class="hotel-section">
+      <h2 class="hotel-section__title">Équipements & services</h2>
+      <div class="amenities-list">
+        <div class="amenity-item">Piscine intérieure chauffée</div>
+        <div class="amenity-item">Restaurant thématique Marvel</div>
+        <div class="amenity-item">Room service 24h/24</div>
+        <div class="amenity-item">Spa & salle de fitness</div>
+        <div class="amenity-item">Bar lounge</div>
+        <div class="amenity-item">Wi-Fi haut débit gratuit</div>
+        <div class="amenity-item">Parking (payant, réservable)</div>
+        <div class="amenity-item">Concierge Disney dédié</div>
+        <div class="amenity-item">Boutique Marvel en hôtel</div>
+        <div class="amenity-item">Animations enfants</div>
+        <div class="amenity-item">Service de baby-sitting</div>
+        <div class="amenity-item">Réservation attractions depuis réception</div>
+      </div>
+    </div>
+
+    <!-- Photos -->
+    <div class="hotel-section">
+      <h2 class="hotel-section__title">Galerie photos</h2>
+      <div class="photos-grid">
+        <div>
+          <div class="photo-item">
+            <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80" alt="Chambre Deluxe">
+          </div>
+          <div class="photo-label">Chambre Deluxe Marvel</div>
+        </div>
+        <div>
+          <div class="photo-item">
+            <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&q=80" alt="Piscine intérieure">
+          </div>
+          <div class="photo-label">Piscine intérieure chauffée</div>
+        </div>
+        <div>
+          <div class="photo-item">
+            <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" alt="Restaurant">
+          </div>
+          <div class="photo-label">Restaurant The Downtown</div>
+        </div>
+        <div>
+          <div class="photo-item">
+            <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80" alt="Lobby">
+          </div>
+          <div class="photo-label">Hall principal</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aires de jeux -->
+    <div class="hotel-section" id="aires-jeux">
+      <h2 class="hotel-section__title">🎠 Aires de jeux & espaces enfants</h2>
+      <div class="hotel-desc">
+        <p>Le Disney Hotel New York — The Art of Marvel dispose de <strong>3 espaces de jeux thématisés Marvel</strong> exclusifs, conçus pour les enfants de 2 à 12 ans. Chaque aire est supervisée et accessible en libre accès pour les clients de l'hôtel.</p>
+      </div>
+      <div class="photos-grid" style="margin-top:16px;">
+        <div>
+          <div class="photo-item">
+            <img src="https://images.unsplash.com/photo-1575783970733-1aaedde1db74?w=600&q=80" alt="Aire de jeux Spider-Man">
+          </div>
+          <div class="photo-label">🕷️ Zone Spider-Man — structures de grimpe</div>
+        </div>
+        <div>
+          <div class="photo-item">
+            <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80" alt="Aire de jeux intérieure">
+          </div>
+          <div class="photo-label">🦸 Espace Super-Héros — jeux interactifs</div>
+        </div>
+        <div>
+          <div class="photo-item">
+            <img src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=600&q=80" alt="Espace créatif enfants">
+          </div>
+          <div class="photo-label">🎨 Atelier créatif Marvel — activités guidées</div>
+        </div>
+        <div>
+          <div class="photo-item">
+            <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&q=80" alt="Terrain extérieur">
+          </div>
+          <div class="photo-label">🌳 Terrain extérieur — aire multisports</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Avis clients -->
+    <div class="hotel-section">
+      <h2 class="hotel-section__title">Avis clients · 4,7 / 5 ⭐</h2>
+      <div class="reviews-grid">
+        <div class="review-item">
+          <div class="review-header">
+            <div>
+              <div class="review-name">Marie-Laure P.</div>
+              <div class="review-date">Famille · Noël 2025</div>
+            </div>
+            <div class="review-stars">★★★★★</div>
+          </div>
+          <div class="review-text">La piscine intérieure a sauvé notre séjour — les enfants y ont passé 2h pendant qu'on récupérait entre deux journées de parc. L'accès anticipé aux parcs vaut vraiment le coup, on a fait Big Thunder Mountain 3 fois sans attendre !</div>
+        </div>
+        <div class="review-item">
+          <div class="review-header">
+            <div>
+              <div class="review-name">Thomas & Émilie R.</div>
+              <div class="review-date">Famille · Été 2025</div>
+            </div>
+            <div class="review-stars">★★★★★</div>
+          </div>
+          <div class="review-text">La rencontre avec Spider-Man au petit-déjeuner : un souvenir que nos enfants n'oublieront jamais. L'hôtel est magnifique, les œuvres Marvel partout donnent un côté musée luxueux. Distance vraiment très raisonnable des parcs.</div>
+        </div>
+        <div class="review-item">
+          <div class="review-header">
+            <div>
+              <div class="review-name">Stéphanie M.</div>
+              <div class="review-date">Famille · Printemps 2025</div>
+            </div>
+            <div class="review-stars">★★★★☆</div>
+          </div>
+          <div class="review-text">Très bel hôtel, chambres spacieuses et thématisées à souhait. Le petit-déjeuner était exceptionnel. Seul bémol : le restaurant le soir est un peu cher. On reviendra surement pour Noël !</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT COLUMN — BOOKING CARD -->
+  <div id="booking-card">
+    <div class="booking-card">
+      <div class="booking-card__title">Réserver cet hôtel</div>
+      <div class="booking-card__price-row">
+        <span class="booking-card__old">549 €</span>
+        <span class="booking-card__new">494 €</span>
+      </div>
+      <div class="booking-card__per">/ nuit · famille 4 pers.</div>
+      <div class="booking-card__discount">-10% offre Noël exclusive</div>
+
+      <div class="booking-field">
+        <label>Arrivée</label>
+        <input type="date" value="2026-12-22">
+      </div>
+      <div class="booking-field">
+        <label>Départ</label>
+        <input type="date" value="2026-12-24">
+      </div>
+      <div class="booking-field">
+        <label>Chambres & visiteurs</label>
+        <select>
+          <option>1 chambre / 4 visiteurs (2 ad. + 2 enf.)</option>
+          <option>1 chambre / 2 visiteurs</option>
+          <option>2 chambres / 6 visiteurs</option>
+        </select>
+      </div>
+
+      <div class="booking-field">
+        <label>Tickets Parcs</label>
+        <select id="tickets-select" onchange="updateTotal()">
+          <option value="0">Sans billets (hôtel seul)</option>
+          <option value="2" selected>2 billets 2 jours · Pack Noël (+198 €)</option>
+          <option value="4">4 billets 2 jours · Famille (+396 €)</option>
+          <option value="2p">2 billets 3 jours · Long séjour (+258 €)</option>
+        </select>
+      </div>
+
+      <div class="booking-card__total" id="booking-total">
+        <div class="booking-card__total-row">
+          <span>Chambre · 2 nuits</span>
+          <span>988 €</span>
+        </div>
+        <div class="booking-card__total-row">
+          <span>Réduction Noël -10%</span>
+          <span style="color:#10b981;">−110 €</span>
+        </div>
+        <div class="booking-card__total-row" id="tickets-row">
+          <span>Tickets Parcs (×2)</span>
+          <span>+198 €</span>
+        </div>
+        <div class="booking-card__total-row">
+          <strong>Total séjour</strong>
+          <strong id="total-price">1 076 €</strong>
+        </div>
+      </div>
+
+      <a href="cart.html" class="btn-blue booking-card__reserve" id="add-to-cart-btn" onclick="saveCartToSession()">🛒 Ajouter au panier</a>
+      <div class="booking-card__guarantee">🔒 Annulation gratuite jusqu'au 15 déc. · Meilleur prix garanti</div>
+
+      <div class="booking-card__included">
+        <div class="included-title">Inclus dans ce séjour</div>
+        <div class="included-item">Accès anticipé aux Parcs · 30 min. avant ouverture</div>
+        <div class="included-item">Navette hôtel ↔ Parcs gratuite</div>
+        <div class="included-item">Wi-Fi haut débit</div>
+        <div class="included-item">Accès piscine intérieure</div>
+        <div class="included-item">Parking (en option +25€/j.)</div>
+        <div class="included-item">Coupe-file (en option +15€/pers.)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DC TOGGLE ===== -->
+<button class="dc-toggle" onclick="alert('Panneau Connaissance client — disponible sur index.html')">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+  Connaissance client
+</button>
+
+<!-- ===== AGENT WOODY ===== -->
+<div class="chat-widget" id="chat-widget">
+  <div class="chat-window" id="chat-window">
+    <div class="chat-header">
+      <div class="chat-header__avatar"><img src="assets/woody.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" alt="Woody"></div>
+      <div>
+        <div class="chat-header__name">Woody</div>
+        <div class="chat-header__status">Agent Disney · En ligne</div>
+      </div>
+      <button class="chat-header__close" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input-area">
+      <input type="text" class="chat-input" id="chat-input" placeholder="Posez votre question…" onkeydown="if(event.key==='Enter')sendChatMessage()">
+      <button class="chat-send" onclick="sendChatMessage()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+    <div class="chat-disclaimer">Propulsé par Agentforce · Disneyland Paris</div>
+  </div>
+  <div class="chat-bubble" id="chat-bubble" style="display:none;">Une question ? Je vous réponds&nbsp;!</div>
+  <button class="chat-trigger" id="chat-trigger" onclick="toggleChat()">
+    <img src="assets/woody.png" style="width:44px;height:44px;border-radius:50%;object-fit:cover;" alt="Woody">
+    <span class="chat-badge" id="chat-badge" style="display:none;">1</span>
+  </button>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="mini-footer">
+  © Disney · MARVEL · Tous droits réservés — <a href="index.html">Retour à l'accueil</a>
+</footer>
+
+<script>
+/* Simple Woody pour page hôtel */
+let chatOpened = false;
+
+function toggleChat() {
+  const win = document.getElementById('chat-window');
+  const badge = document.getElementById('chat-badge');
+  if (!chatOpened) {
+    chatOpened = true;
+    badge.style.display = 'none';
+    win.classList.add('open');
+    initChat();
+  } else {
+    win.classList.toggle('open');
+  }
+}
+
+function initChat() {
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML = '';
+  setTimeout(() => {
+    appendMsg('bot', '🤠 Howdy ! Je suis Woody, votre guide Disneyland Paris. Je vois que vous regardez le <strong>Disney Hotel New York — The Art of Marvel</strong> — excellent choix pour Noël !<br><br>Une question sur l\'hôtel ? Je suis là !');
+    setTimeout(() => appendFollowups(['Piscine & équipements ?', 'Distance des parcs ?', 'Ajouter coupe-file', 'Finaliser ma réservation']), 400);
+  }, 100);
+}
+
+function appendMsg(role, html) {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = `chat-msg chat-msg--${role}`;
+  div.innerHTML = `<div class="chat-msg__bubble">${html}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function appendFollowups(qs) {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'chat-followup';
+  qs.forEach(q => {
+    const btn = document.createElement('button');
+    btn.className = 'chat-followup__btn';
+    btn.textContent = q;
+    btn.onclick = () => {
+      div.remove();
+      appendMsg('user', q);
+      processResponse(q.toLowerCase());
+    };
+    div.appendChild(btn);
+  });
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+const responses = {
+  piscine: '🏊 Oui ! L\'hôtel dispose d\'une <strong>piscine intérieure chauffée</strong> ouverte toute l\'année — idéale en décembre. Un espace enfants est disponible, les adultes peuvent se détendre pendant que les enfants s\'amusent.<br><br>La piscine est accessible tous les jours de 7h à 22h.',
+  distance: '📍 L\'hôtel est à <strong>10 minutes à pied</strong> des entrées des Parcs. Une <strong>navette gratuite</strong> est également disponible toutes les 15 minutes si vous préférez. Le trajet en navette prend environ 5 minutes.',
+  coupe: '⚡ Le coupe-file s\'ajoute facilement à votre séjour — <strong>15 € / personne / jour</strong> pour 2 attractions prioritaires par jour. Parfait pour Big Thunder Mountain et Buzz Lightyear !<br><br>Je peux l\'ajouter à votre configuration ?',
+  rés: '🛒 Parfait ! Cliquez sur "Ajouter au panier" dans la fiche hôtel pour sélectionner vos billets et continuer. Vous pourrez ajouter le coupe-file à l\'étape suivante !',
+  aires: '🎠 Bonne nouvelle ! L\'hôtel dispose de <strong>3 espaces de jeux thématisés Marvel</strong> pour les enfants : une zone Spider-Man avec structures de grimpe, un espace Super-Héros avec jeux interactifs, et un atelier créatif Marvel — le tout en libre accès !<br><br>Je vous emmène voir les photos ?',
+};
+
+function processResponse(lower) {
+  const msgs = document.getElementById('chat-messages');
+  const typing = document.createElement('div');
+  typing.className = 'chat-msg chat-msg--bot';
+  typing.id = 'typing';
+  const typingBubble = document.createElement('div');
+  typingBubble.className = 'chat-msg__bubble chat-typing';
+  typingBubble.innerHTML = '<span></span><span></span><span></span>';
+  typing.appendChild(typingBubble);
+  msgs.appendChild(typing);
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(() => {
+    document.getElementById('typing')?.remove();
+    let text = '🤠 Je cherche l\'info pour vous ! Dites-moi si vous souhaitez réserver — je vous guide étape par étape.';
+    let followupAfter = null;
+    if (/piscine|aqua|nag/.test(lower)) text = responses.piscine;
+    else if (/dist|parc|min|marche|navette/.test(lower)) text = responses.distance;
+    else if (/coupe|file|attente/.test(lower)) text = responses.coupe;
+    else if (/rés|réserv|panier|achet/.test(lower)) text = responses.rés;
+    else if (/aire|jeu|play|enfant|kid/.test(lower)) {
+      text = responses.aires;
+      followupAfter = () => {
+        appendMsg('bot', '👇 Voici les aires de jeux de l\'hôtel !');
+        setTimeout(() => {
+          const el = document.getElementById('aires-jeux');
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 400);
+      };
+    }
+    appendMsg('bot', text);
+    setTimeout(() => {
+      if (followupAfter) followupAfter();
+      else appendFollowups(['Ajouter coupe-file', 'Finaliser ma réservation', 'Autres questions']);
+    }, 300);
+  }, 900);
+}
+
+function sendChatMessage() {
+  const input = document.getElementById('chat-input');
+  if (!input.value.trim()) return;
+  const text = input.value.trim();
+  input.value = '';
+  document.querySelector('.chat-followup')?.remove();
+  appendMsg('user', text);
+  processResponse(text.toLowerCase());
+}
+
+function updateTotal() {
+  const sel = document.getElementById('tickets-select');
+  const v = sel ? sel.value : '0';
+  const row = document.getElementById('tickets-row');
+  const totalEl = document.getElementById('total-price');
+  const base = 878;
+  let ticketCost = 0;
+  let ticketLabel = '';
+  if (v === '2') { ticketCost = 198; ticketLabel = 'Tickets Parcs (×2)'; }
+  else if (v === '4') { ticketCost = 396; ticketLabel = 'Tickets Parcs (×4)'; }
+  else if (v === '2p') { ticketCost = 258; ticketLabel = 'Tickets 3 jours (×2)'; }
+  if (row) {
+    if (ticketCost > 0) {
+      row.style.display = '';
+      row.querySelector('span:first-child').textContent = ticketLabel;
+      row.querySelector('span:last-child').textContent = '+' + ticketCost + ' €';
+    } else {
+      row.style.display = 'none';
+    }
+  }
+  if (totalEl) totalEl.textContent = (base + ticketCost).toLocaleString('fr-FR') + ' €';
+}
+
+function saveCartToSession() {
+  const sel = document.getElementById('tickets-select');
+  const v = sel ? sel.value : '0';
+  const totalEl = document.getElementById('total-price');
+  sessionStorage.setItem('cart_hotel', 'Disney Hotel New York — The Art of Marvel');
+  sessionStorage.setItem('cart_tickets', sel ? sel.options[sel.selectedIndex].text : 'Sans billets');
+  sessionStorage.setItem('cart_total', totalEl ? totalEl.textContent : '878 €');
+}
+
+// Set visited flag so index.html can detect we came from hotel page
+sessionStorage.setItem('dlp_visited_hotels', '1');
+
+// Auto-open Woody if navigated from chat (e.g. piscine question)
+window.addEventListener('DOMContentLoaded', function() {
+  if (sessionStorage.getItem('woody_open') === '1') {
+    sessionStorage.removeItem('woody_open');
+    const msg = sessionStorage.getItem('woody_msg') || '';
+    sessionStorage.removeItem('woody_msg');
+    setTimeout(function() {
+      chatOpened = true;
+      const win = document.getElementById('chat-window');
+      if (win) { win.classList.add('open'); }
+      initChat();
+      if (msg) {
+        setTimeout(function() { appendMsg('bot', msg); }, 700);
+      }
+    }, 300);
+  }
+});
+</script>
+
+</body>
+</html>

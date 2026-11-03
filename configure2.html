@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Trouvez votre hôtel idéal — Disneyland Paris</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Open Sans', Arial, sans-serif; color: #222; background: #f0f4ff; }
+    img { display: block; }
+    a { text-decoration: none; color: inherit; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    /* HEADER */
+    .cfg-header { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 0; position: sticky; top: 0; z-index: 200; }
+    .cfg-header__inner { display: flex; align-items: center; height: 64px; gap: 16px; }
+    .cfg-header__logo { display: flex; align-items: center; }
+    .cfg-header__logo img { height: 44px; width: auto; }
+    .cfg-header__back { display: flex; align-items: center; gap: 8px; color: #003087; font-size: 13px; font-weight: 700; padding: 8px 16px; border: 2px solid #003087; border-radius: 20px; transition: all .2s; }
+    .cfg-header__back:hover { background: #003087; color: #fff; }
+    .cfg-header__title { font-family: 'Nunito', sans-serif; font-size: 17px; font-weight: 800; color: #111; margin-left: 8px; }
+    .cfg-header__perso { display: flex; align-items: center; gap: 6px; margin-left: auto; background: rgba(0,48,135,0.07); border: 1px solid rgba(0,48,135,0.2); border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 700; color: #003087; }
+
+    /* HERO STRIP */
+    .cfg-hero { background: linear-gradient(135deg, #003087 0%, #1565C0 100%); padding: 36px 0 40px; }
+    .cfg-hero__eyebrow { font-size: 11px; font-weight: 700; color: rgba(255,215,0,0.9); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .cfg-hero__title { font-family: 'Nunito', sans-serif; font-size: clamp(22px, 3vw, 32px); font-weight: 900; color: #fff; margin-bottom: 10px; }
+    .cfg-hero__sub { font-size: 15px; color: rgba(255,255,255,0.8); }
+
+    /* LAYOUT */
+    .cfg-layout { display: grid; grid-template-columns: 380px 1fr; gap: 28px; padding: 32px 0 64px; align-items: start; }
+
+    /* SLIDERS PANEL */
+    .cfg-panel { background: #fff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); padding: 28px; position: sticky; top: 80px; }
+    .cfg-panel__title { font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800; color: #111; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    .cfg-panel__badge { background: #003087; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+
+    .slider-group { margin-bottom: 24px; }
+    .slider-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .slider-label__name { font-size: 13px; font-weight: 700; color: #333; display: flex; align-items: center; gap: 6px; }
+    .slider-label__val { font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 900; color: #003087; min-width: 60px; text-align: right; }
+    .slider-track { position: relative; height: 6px; background: #e5e7eb; border-radius: 6px; cursor: pointer; }
+    .slider-track input[type=range] {
+      width: 100%; height: 6px; appearance: none; background: transparent; outline: none; cursor: pointer; position: relative; z-index: 2;
+    }
+    .slider-track input[type=range]::-webkit-slider-thumb {
+      appearance: none; width: 22px; height: 22px; border-radius: 50%; background: #003087; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,48,135,0.35); cursor: pointer; transition: transform .15s;
+    }
+    .slider-track input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+    .slider-track input[type=range]::-webkit-slider-runnable-track { background: transparent; }
+    .slider-fill { position: absolute; left: 0; top: 0; height: 6px; background: #003087; border-radius: 6px; pointer-events: none; transition: width .1s; }
+
+    .slider-hints { display: flex; justify-content: space-between; margin-top: 6px; }
+    .slider-hints span { font-size: 11px; color: #aaa; }
+
+    .cfg-divider { border: none; border-top: 1px solid #f0f0f0; margin: 20px 0; }
+
+    .cfg-summary { background: #EBF2FF; border-radius: 10px; padding: 14px 16px; margin-top: 4px; }
+    .cfg-summary__row { display: flex; justify-content: space-between; font-size: 13px; color: #555; margin-bottom: 6px; }
+    .cfg-summary__row:last-child { margin-bottom: 0; font-weight: 700; color: #111; font-size: 14px; }
+    .cfg-summary__row span:last-child { color: #003087; font-weight: 700; }
+
+    .cfg-cta-reset { width: 100%; background: transparent; border: 1.5px solid #d1d5db; border-radius: 20px; padding: 9px; font-size: 13px; font-weight: 600; color: #666; cursor: pointer; margin-top: 14px; font-family: inherit; transition: all .2s; }
+    .cfg-cta-reset:hover { border-color: #003087; color: #003087; }
+    .fp-toggle { flex: 1; border: 2px solid #d1d5db; border-radius: 20px; padding: 8px 12px; font-size: 12px; font-weight: 700; cursor: pointer; background: transparent; color: #888; font-family: inherit; transition: all .2s; }
+    .fp-toggle:hover { border-color: #003087; color: #003087; }
+    .fp-toggle--active { background: #003087; color: #fff; border-color: #003087; }
+
+    /* RESULTS */
+    .cfg-results { display: flex; flex-direction: column; gap: 16px; }
+    .cfg-results__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .cfg-results__count { font-size: 14px; color: #666; }
+    .cfg-results__count strong { color: #003087; }
+    .cfg-results__sort { font-size: 13px; color: #888; }
+
+    /* HOTEL RESULT CARD */
+    .res-card { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.07); border: 2px solid transparent; display: flex; transition: all .25s; }
+    .res-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.12); }
+    .res-card--match { border-color: #003087; box-shadow: 0 4px 20px rgba(0,48,135,0.15); }
+    .res-card--top { border-color: #FFD700; box-shadow: 0 4px 20px rgba(255,215,0,0.2); }
+    .res-card__img { width: 220px; flex-shrink: 0; overflow: hidden; background: #e5e7eb; position: relative; }
+    .res-card__img img { width: 100%; height: 100%; object-fit: cover; }
+    .res-card__badge { position: absolute; top: 10px; left: 10px; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 10px; }
+    .badge-top { background: #FFD700; color: #003087; }
+    .badge-match { background: #003087; color: #fff; }
+    .badge-promo { background: #e53935; color: #fff; }
+    .res-card__body { flex: 1; padding: 20px 22px; display: flex; gap: 16px; align-items: flex-start; }
+    .res-card__info { flex: 1; }
+    .res-card__stars { color: #FFB800; font-size: 13px; margin-bottom: 3px; }
+    .res-card__title { font-family: 'Nunito', sans-serif; font-size: 17px; font-weight: 800; color: #111; margin-bottom: 4px; }
+    .res-card__loc { font-size: 12px; color: #888; margin-bottom: 8px; }
+    .res-card__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .res-tag { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 10px; }
+    .res-tag--blue { background: #EBF2FF; color: #003087; }
+    .res-tag--green { background: #e7f7ee; color: #059669; }
+    .res-tag--orange { background: #FFF8E1; color: #7a5000; }
+    .res-card__match-score { font-size: 12px; color: #666; display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+    .match-bar { flex: 1; height: 6px; background: #e5e7eb; border-radius: 6px; overflow: hidden; max-width: 120px; }
+    .match-bar__fill { height: 100%; background: linear-gradient(90deg, #003087, #1565C0); border-radius: 6px; transition: width .5s ease; }
+    .res-card__pricing { text-align: right; flex-shrink: 0; min-width: 130px; }
+    .res-card__dist { font-size: 11px; color: #888; margin-bottom: 6px; }
+    .res-card__price { font-size: 28px; font-weight: 900; color: #003087; line-height: 1; }
+    .res-card__per { font-size: 11px; color: #888; margin-bottom: 4px; }
+    .res-card__old { font-size: 13px; color: #999; text-decoration: line-through; margin-bottom: 10px; }
+    .res-card__discount { font-size: 12px; font-weight: 700; color: #e53935; margin-bottom: 12px; }
+    .btn-res { background: #003087; color: #fff; border: none; border-radius: 20px; padding: 10px 20px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background .2s; display: inline-block; text-align: center; }
+    .btn-res:hover { background: #00247a; }
+    .btn-res-outline { background: transparent; color: #003087; border: 2px solid #003087; border-radius: 20px; padding: 9px 18px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all .2s; display: inline-block; }
+    .btn-res-outline:hover { background: #003087; color: #fff; }
+
+    /* EMPTY STATE */
+    .cfg-empty { text-align: center; padding: 60px 20px; background: #fff; border-radius: 14px; }
+    .cfg-empty__icon { font-size: 48px; margin-bottom: 16px; }
+    .cfg-empty__title { font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 800; color: #111; margin-bottom: 8px; }
+    .cfg-empty__text { font-size: 14px; color: #777; }
+
+    /* DC PANEL */
+    .dc-panel { position: fixed; top: 0; right: -340px; width: 320px; height: 100vh; background: #0f172a; color: #e2e8f0; z-index: 1000; overflow-y: auto; transition: right .35s cubic-bezier(.4,0,.2,1); box-shadow: -4px 0 20px rgba(0,0,0,0.3); }
+    .dc-panel.open { right: 0; }
+    .dc-panel__header { background: #1e293b; padding: 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #334155; position: sticky; top: 0; }
+    .dc-panel__logo { display: flex; align-items: center; gap: 8px; }
+    .dc-panel__logo-mark { width: 28px; height: 28px; background: linear-gradient(135deg, #0070D2, #1589EE); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 900; }
+    .dc-panel__logo-text { font-size: 13px; font-weight: 700; color: #94a3b8; }
+    .dc-panel__logo-title { font-size: 11px; color: #64748b; }
+    .dc-panel__close { background: none; border: none; color: #64748b; cursor: pointer; font-size: 18px; padding: 4px; }
+    .dc-body { padding: 16px; }
+    .dc-status { display: flex; align-items: center; gap: 8px; background: #1e293b; border-radius: 6px; padding: 10px 14px; margin-bottom: 16px; }
+    .dc-status__dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981; animation: pulse-dot 1.5s infinite; flex-shrink: 0; }
+    .dc-status__label { font-size: 13px; font-weight: 600; color: #e2e8f0; }
+    @keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+    .dc-section { margin-bottom: 20px; }
+    .dc-section-title { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+    .dc-field { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #1e293b; gap: 8px; }
+    .dc-field:last-child { border-bottom: none; }
+    .dc-field__key { font-size: 12px; color: #94a3b8; }
+    .dc-field__val { font-size: 12px; font-weight: 600; color: #e2e8f0; text-align: right; }
+    .dc-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 10px; }
+    .dc-badge--blue { background: rgba(59,130,246,0.2); color: #93c5fd; }
+    .dc-badge--green { background: rgba(16,185,129,0.2); color: #6ee7b7; }
+    .dc-badge--orange { background: rgba(245,158,11,0.2); color: #fcd34d; }
+    .dc-signal-list { display: flex; flex-direction: column; gap: 6px; }
+    .dc-signal { font-size: 11px; padding: 6px 10px; background: #1e293b; border-radius: 4px; color: #94a3b8; border-left: 3px solid #3b82f6; }
+    .dc-toggle { position: fixed; top: 50%; right: 0; transform: translateY(-50%); background: #0070D2; color: #fff; border: none; border-radius: 6px 0 0 6px; padding: 12px 8px; cursor: pointer; z-index: 999; writing-mode: vertical-rl; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
+    .dc-toggle:hover { background: #005fb2; }
+
+    /* CHAT WIDGET */
+    .chat-widget { position: fixed; bottom: 24px; right: 24px; z-index: 998; }
+    .chat-trigger { width: 60px; height: 60px; border-radius: 50%; background: #003087; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,48,135,0.4); transition: transform .2s; position: relative; }
+    .chat-trigger:hover { transform: scale(1.08); }
+    .chat-badge { position: absolute; top: -2px; right: -2px; background: #e53935; color: #fff; width: 20px; height: 20px; border-radius: 50%; font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; }
+    .chat-window { position: absolute; bottom: 72px; right: 0; width: 360px; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.18); overflow: hidden; display: none; }
+    .chat-window.open { display: flex; flex-direction: column; }
+    .chat-header { background: #003087; padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
+    .chat-header__avatar { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+    .chat-header__name { font-size: 14px; font-weight: 700; color: #fff; }
+    .chat-header__status { font-size: 11px; color: rgba(255,255,255,0.7); display: flex; align-items: center; gap: 4px; }
+    .chat-header__status::before { content: ''; display: inline-block; width: 7px; height: 7px; background: #4ade80; border-radius: 50%; }
+    .chat-header__close { margin-left: auto; background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 18px; }
+    .chat-messages { padding: 16px; flex: 1; overflow-y: auto; max-height: 340px; display: flex; flex-direction: column; gap: 12px; background: #f9fafb; }
+    .chat-msg { max-width: 88%; }
+    .chat-msg--bot { align-self: flex-start; }
+    .chat-msg--user { align-self: flex-end; }
+    .chat-msg__bubble { padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.5; }
+    .chat-msg--bot .chat-msg__bubble { background: #fff; color: #222; border: 1px solid #e5e7eb; border-bottom-left-radius: 2px; }
+    .chat-msg--user .chat-msg__bubble { background: #003087; color: #fff; border-bottom-right-radius: 2px; }
+    .chat-followup { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .chat-followup__btn { border: 1.5px solid #003087; border-radius: 16px; background: transparent; color: #003087; font-size: 12px; font-weight: 600; padding: 5px 12px; cursor: pointer; transition: all .2s; font-family: inherit; }
+    .chat-followup__btn:hover { background: #003087; color: #fff; }
+    .chat-input-area { display: flex; border-top: 1px solid #e5e7eb; }
+    .chat-input { flex: 1; border: none; padding: 12px 14px; font-size: 14px; font-family: inherit; outline: none; }
+    .chat-send { background: #003087; border: none; color: #fff; padding: 12px 16px; cursor: pointer; }
+    .chat-send:hover { background: #00247a; }
+    .chat-disclaimer { font-size: 11px; color: #9ca3af; text-align: center; padding: 8px; border-top: 1px solid #f3f4f6; }
+    .chat-typing span { display: inline-block; width: 6px; height: 6px; background: #9ca3af; border-radius: 50%; animation: bounce 1.2s infinite; margin: 0 2px; }
+    .chat-typing span:nth-child(2) { animation-delay: .2s; }
+    .chat-typing span:nth-child(3) { animation-delay: .4s; }
+    @keyframes bounce { 0%,80%,100% { transform: translateY(0); } 40% { transform: translateY(-6px); } }
+
+    @media (max-width: 900px) {
+      .cfg-layout { grid-template-columns: 1fr; }
+      .cfg-panel { position: static; }
+      .res-card { flex-direction: column; }
+      .res-card__img { width: 100%; height: 180px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- DC PANEL -->
+<div id="dc-panel" class="dc-panel">
+  <div class="dc-panel__header">
+    <div class="dc-panel__logo">
+      <div class="dc-panel__logo-mark">SF</div>
+      <div>
+        <div class="dc-panel__logo-text">Agentforce Marketing</div>
+        <div class="dc-panel__logo-title">Data 360 — Configurateur</div>
+      </div>
+    </div>
+    <button class="dc-panel__close" onclick="toggleDCPanel()">✕</button>
+  </div>
+  <div class="dc-body">
+    <div class="dc-status">
+      <div class="dc-status__dot"></div>
+      <span class="dc-status__label" id="dc-status-label">Profil identifié — Sophie</span>
+    </div>
+    <div class="dc-section">
+      <div class="dc-section-title">Session configurateur</div>
+      <div class="dc-field">
+        <span class="dc-field__key">Page</span>
+        <span class="dc-field__val">Configurateur hôtel</span>
+      </div>
+      <div class="dc-field">
+        <span class="dc-field__key">Critères ajustés</span>
+        <span class="dc-field__val" id="dc-adjustments">0</span>
+      </div>
+      <div class="dc-field">
+        <span class="dc-field__key">Hôtel préféré</span>
+        <span class="dc-field__val" id="dc-top-hotel">—</span>
+      </div>
+    </div>
+    <div class="dc-section">
+      <div class="dc-section-title">Signaux temps réel</div>
+      <div class="dc-signal-list" id="dc-signal-list">
+        <div class="dc-signal">Arrivée depuis Agent Woody · configurateur</div>
+      </div>
+    </div>
+  </div>
+</div>
+<button class="dc-toggle" onclick="toggleDCPanel()">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+  Data 360
+</button>
+
+<!-- HEADER -->
+<header class="cfg-header">
+  <div class="container">
+    <div class="cfg-header__inner">
+      <a href="index.html" class="cfg-header__logo"><img src="assets/logo.jpg" alt="Disneyland Paris"></a>
+      <span class="cfg-header__title">Configurateur hôtel</span>
+      <a href="hotels.html" class="cfg-header__back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Tous les hôtels
+      </a>
+      <div class="cfg-header__perso" id="perso-pill" style="display:none;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span id="perso-name">Personnalisé pour vous</span>
+      </div>
+      <a href="cart.html" style="display:inline-flex;align-items:center;gap:6px;background:#FFD700;color:#003087;font-size:13px;font-weight:700;padding:7px 14px;border-radius:20px;text-decoration:none;box-shadow:0 2px 6px rgba(0,0,0,0.15);flex-shrink:0;">🛒 Mon panier</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="cfg-hero">
+  <div class="container">
+    <p class="cfg-hero__eyebrow">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Agentforce · Personnalisation Data 360
+    </p>
+    <h1 class="cfg-hero__title">Quel est l'hôtel idéal pour votre famille&nbsp;?</h1>
+    <p class="cfg-hero__sub">Ajustez les curseurs — je mets à jour les résultats en temps réel selon vos critères.</p>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="container">
+  <div class="cfg-layout">
+
+    <!-- PANEL SLIDERS -->
+    <div class="cfg-panel">
+      <div class="cfg-panel__title">
+        🎯 Vos critères
+        <span class="cfg-panel__badge" id="badge-results">6 hôtels</span>
+      </div>
+
+      <!-- Nuits -->
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-label__name">🌙 Nombre de nuits</span>
+          <span class="slider-label__val" id="val-nuits">2</span>
+        </div>
+        <div class="slider-track">
+          <div class="slider-fill" id="fill-nuits" style="width:33.3%"></div>
+          <input type="range" id="slider-nuits" min="1" max="5" value="2" oninput="updateSlider('nuits', this.value)">
+        </div>
+        <div class="slider-hints"><span>1 nuit</span><span>5 nuits</span></div>
+      </div>
+
+      <!-- Visiteurs -->
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-label__name">👨‍👩‍👧‍👦 Visiteurs</span>
+          <span class="slider-label__val" id="val-visiteurs">2A + 2E</span>
+        </div>
+        <div class="slider-track">
+          <div class="slider-fill" id="fill-visiteurs" style="width:50%"></div>
+          <input type="range" id="slider-visiteurs" min="1" max="4" value="2" oninput="updateSlider('visiteurs', this.value)">
+        </div>
+        <div class="slider-hints"><span>1 pers.</span><span>2A + 3E</span></div>
+      </div>
+
+      <!-- Parcs -->
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-label__name">🏰 Parcs visités</span>
+          <span class="slider-label__val" id="val-parcs">1 parc</span>
+        </div>
+        <div class="slider-track">
+          <div class="slider-fill" id="fill-parcs" style="width:0%"></div>
+          <input type="range" id="slider-parcs" min="1" max="2" value="1" oninput="updateSlider('parcs', this.value)">
+        </div>
+        <div class="slider-hints"><span>1 parc</span><span>2 parcs</span></div>
+      </div>
+
+      <!-- Budget -->
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-label__name">💶 Budget / nuit</span>
+          <span class="slider-label__val" id="val-budget">600 €</span>
+        </div>
+        <div class="slider-track">
+          <div class="slider-fill" id="fill-budget" style="width:57%"></div>
+          <input type="range" id="slider-budget" min="1" max="7" value="4" oninput="updateSlider('budget', this.value)">
+        </div>
+        <div class="slider-hints"><span>&lt; 200 €</span><span>700 €+</span></div>
+      </div>
+
+      <hr class="cfg-divider">
+
+      <!-- Billets 2J -->
+      <div class="slider-group" id="tickets-group">
+        <div class="slider-label">
+          <span class="slider-label__name">🎟️ Billets 2 jours</span>
+          <span class="slider-label__val" id="val-tickets">4 billets</span>
+        </div>
+        <div class="slider-track">
+          <div class="slider-fill" id="fill-tickets" style="width:75%"></div>
+          <input type="range" id="slider-tickets" min="1" max="6" value="4" oninput="updateSlider('tickets', this.value)">
+        </div>
+        <div class="slider-hints"><span>1 billet</span><span>6 billets</span></div>
+        <div style="margin-top:8px;font-size:12px;color:#666;display:flex;justify-content:space-between;">
+          <span>Prix unitaire · 2 jours</span>
+          <span style="font-weight:700;color:#003087;" id="tickets-price-total">4 × 129 € = <strong>516 €</strong></span>
+        </div>
+      </div>
+
+      <!-- Fast Pass -->
+      <div class="slider-group" id="fastpass-group">
+        <div class="slider-label">
+          <span class="slider-label__name">⚡ Coupe-file (fast pass)</span>
+          <span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:12px;background:#FFF8E1;color:#7a5000;" id="val-fastpass">Non</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <button id="fp-off" class="fp-toggle fp-toggle--active" onclick="setFastPass(false)">Non inclus</button>
+          <button id="fp-on" class="fp-toggle" onclick="setFastPass(true)">⚡ Ajouter (+15 €/pers./j.)</button>
+        </div>
+        <div style="font-size:12px;color:#888;line-height:1.5;" id="fp-desc">Le coupe-file permet d'accéder en priorité aux meilleures attractions.</div>
+        <div style="display:none;margin-top:8px;font-size:12px;color:#666;justify-content:space-between;" id="fp-price-row">
+          <span>⚡ Fast pass inclus</span>
+          <span style="font-weight:700;color:#e53935;" id="fp-price-total"></span>
+        </div>
+        <button id="fp-cta-btn" onclick="setFastPass(true)" style="display:block;width:100%;margin-top:14px;padding:13px;background:linear-gradient(135deg,#FFD700,#FFA500);color:#003087;border:none;border-radius:10px;font-size:13px;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:0.3px;box-shadow:0 3px 10px rgba(255,165,0,0.35);">⚡ Ajouter des fast pass</button>
+      </div>
+
+      <hr class="cfg-divider">
+
+      <!-- Summary -->
+      <div class="cfg-summary" id="cfg-summary">
+        <div class="cfg-summary__row">
+          <span>Dates :</span>
+          <span>22–24 déc. 2026</span>
+        </div>
+        <div class="cfg-summary__row">
+          <span>Durée :</span>
+          <span id="sum-nuits">2 nuits</span>
+        </div>
+        <div class="cfg-summary__row">
+          <span>Visiteurs :</span>
+          <span id="sum-visiteurs">2 adultes + 2 enfants</span>
+        </div>
+        <div class="cfg-summary__row">
+          <span>Budget total hôtel :</span>
+          <span id="sum-budget">≤ 1 200 €</span>
+        </div>
+      </div>
+
+      <button class="cfg-cta-reset" onclick="resetSliders()">↺ Réinitialiser les critères</button>
+    </div>
+
+    <!-- RESULTS -->
+    <div>
+      <div class="cfg-results__header">
+        <p class="cfg-results__count" id="results-count"><strong>6</strong> hôtels correspondent à vos critères</p>
+        <p class="cfg-results__sort">Triés par correspondance</p>
+      </div>
+      <div class="cfg-results" id="results-list">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CHAT WIDGET -->
+<div class="chat-widget" id="chat-widget">
+  <div class="chat-window" id="chat-window">
+    <div class="chat-header">
+      <div class="chat-header__avatar"><img src="assets/woody.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;" alt="Woody"></div>
+      <div>
+        <div class="chat-header__name">Woody</div>
+        <div class="chat-header__status">Agent Disney · En ligne</div>
+      </div>
+      <button class="chat-header__close" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input-area">
+      <input type="text" class="chat-input" id="chat-input" placeholder="Posez votre question…" onkeydown="if(event.key==='Enter')sendChatMessage()">
+      <button class="chat-send" onclick="sendChatMessage()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+    <div class="chat-disclaimer">Propulsé par Agentforce · Disneyland Paris</div>
+  </div>
+  <button class="chat-trigger" id="chat-trigger" onclick="toggleChat()">
+    <img src="assets/woody.png" style="width:44px;height:44px;border-radius:50%;object-fit:cover;" alt="Woody">
+    <span class="chat-badge">1</span>
+  </button>
+</div>
+
+<script>
+/* v20261103 — force cache bust */
+if (window.__cfg_version !== '20261103') {
+  window.__cfg_version = '20261103';
+  if (performance.navigation && performance.navigation.type !== 1) {
+    const url = new URL(window.location.href);
+    if (!url.searchParams.get('v')) {
+      url.searchParams.set('v', '20261103');
+      window.location.replace(url.toString());
+    }
+  }
+}
+/* ===== HOTELS DATA ===== */
+const HOTELS = [
+  {
+    id: 'disneyland-hotel',
+    name: 'Disneyland Hotel',
+    stars: 5,
+    starsLabel: '★★★★★',
+    distMin: 0,
+    distLabel: 'À l\'entrée du Parc',
+    priceBase: 699,
+    img: 'assets/hotel-castle.png',
+    imgFallback: 'https://images.unsplash.com/photo-1784411641863-d163d776ed55?w=400&q=80',
+    tags: ['Accès anticipé Parcs', 'Coupe-file incluse', 'Petit-déjeuner Disney'],
+    tagClasses: ['green', 'orange', 'blue'],
+    description: 'L\'hôtel le plus emblématique, à l\'entrée même du Parc Disneyland.',
+    maxVisiteurs: 4,
+    parcsIncl: 2,
+  },
+  {
+    id: 'marvel',
+    name: 'Disney Hotel New York — The Art of Marvel',
+    stars: 4,
+    starsLabel: '★★★★',
+    distMin: 10,
+    distLabel: '10 min. à pied des Parcs',
+    priceBase: 549,
+    img: 'assets/hotel-marvel.jpg',
+    imgFallback: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=400&q=80',
+    tags: ['Coupe-file 2 attr./jour', 'Cadeau de bienvenue Marvel', 'Navette gratuite'],
+    tagClasses: ['orange', 'green', 'blue'],
+    description: 'Vivez comme un Super Héros. Plus de 350 œuvres Marvel originales.',
+    maxVisiteurs: 4,
+    parcsIncl: 2,
+    promo: '-10%',
+  },
+  {
+    id: 'newport',
+    name: 'Disney Newport Bay Club',
+    stars: 4,
+    starsLabel: '★★★★',
+    distMin: 15,
+    distLabel: '15 min. à pied des Parcs',
+    priceBase: 349,
+    img: 'assets/hotel-newport.jpg',
+    imgFallback: 'https://images.unsplash.com/photo-1766250827210-fe7707779637?w=400&q=80',
+    tags: ['Bord du lac', 'Restaurant spécialisé', 'Navette gratuite'],
+    tagClasses: ['blue', 'green', 'blue'],
+    description: 'Ambiance maritime élégante au bord du lac Disney.',
+    maxVisiteurs: 5,
+    parcsIncl: 1,
+  },
+  {
+    id: 'sequoia',
+    name: 'Disney\'s Sequoia Lodge',
+    stars: 4,
+    starsLabel: '★★★★',
+    distMin: 15,
+    distLabel: '15 min. à pied des Parcs',
+    priceBase: 289,
+    img: 'assets/hotel-sequoia.jpg',
+    imgFallback: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80',
+    tags: ['Piscine couverte', 'Spa & bien-être', 'Navette gratuite'],
+    tagClasses: ['blue', 'green', 'blue'],
+    description: 'Lodge boisé, ambiance chaleureuse. Idéal pour les familles.',
+    maxVisiteurs: 4,
+    parcsIncl: 1,
+  },
+  {
+    id: 'cheyenne',
+    name: 'Disney\'s Hotel Cheyenne',
+    stars: 2,
+    starsLabel: '★★',
+    distMin: 20,
+    distLabel: '20 min. à pied des Parcs',
+    priceBase: 179,
+    img: 'assets/hotel-cheyenne.jpg',
+    imgFallback: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400&q=80',
+    tags: ['Thème Toy Story', 'Idéal petits budgets', 'Navette gratuite'],
+    tagClasses: ['orange', 'green', 'blue'],
+    description: 'L\'esprit Far West et l\'univers de Woody & Buzz. Rapport qualité-prix imbattable.',
+    maxVisiteurs: 4,
+    parcsIncl: 1,
+  },
+  {
+    id: 'santa-fe',
+    name: 'Disney\'s Hotel Santa Fe',
+    stars: 2,
+    starsLabel: '★★',
+    distMin: 25,
+    distLabel: '25 min. à pied des Parcs',
+    priceBase: 149,
+    img: 'assets/hotel-santa-fe.jpg',
+    imgFallback: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=400&q=80',
+    tags: ['Thème Cars / Route 66', 'Très économique', 'Navette gratuite'],
+    tagClasses: ['orange', 'green', 'blue'],
+    description: 'Univers Cars & Route 66. Le choix malin pour les familles à petit budget.',
+    maxVisiteurs: 4,
+    parcsIncl: 1,
+  },
+];
+
+/* ===== STATE ===== */
+const cfg = { nuits: 2, visiteurs: 2, parcs: 1, budget: 4 };
+const BUDGET_MAP = { 1: 200, 2: 300, 3: 400, 4: 600, 5: 700, 6: 800, 7: 9999 };
+const BUDGET_LABEL = { 1: '200 €', 2: '300 €', 3: '400 €', 4: '600 €', 5: '700 €', 6: '800 €', 7: '700+ €' };
+const VISITEURS_MAP = { 1: { label: '1 adulte', adults: 1, children: 0, total: 1 }, 2: { label: '2A + 2E', adults: 2, children: 2, total: 4 }, 3: { label: '2A + 3E', adults: 2, children: 3, total: 5 }, 4: { label: '2A + 3E', adults: 2, children: 3, total: 5 } };
+let adjustmentCount = 0;
+let dcOpen = false;
+let fastPassEnabled = false;
+
+/* ===== FAST PASS TOGGLE ===== */
+function setFastPass(enabled) {
+  fastPassEnabled = enabled;
+  document.getElementById('fp-off').classList.toggle('fp-toggle--active', !enabled);
+  document.getElementById('fp-on').classList.toggle('fp-toggle--active', enabled);
+  document.getElementById('val-fastpass').textContent = enabled ? 'Oui ⚡' : 'Non';
+  document.getElementById('val-fastpass').style.color = enabled ? '#e53935' : '#888';
+  const nuits = cfg.nuits || 2;
+  const ticketsCount = cfg.tickets || 4;
+  const fpRow = document.getElementById('fp-price-row');
+  fpRow.style.display = enabled ? 'flex' : 'none';
+  const fpCta = document.getElementById('fp-cta-btn');
+  if (fpCta) fpCta.style.display = enabled ? 'none' : 'block';
+  if (enabled) {
+    const fpTotal = ticketsCount * nuits * 15;
+    document.getElementById('fp-price-total').textContent = ticketsCount + ' pers. × ' + nuits + 'j. × 15 € = ' + fpTotal + ' €';
+  }
+  updateTicketsTotal();
+}
+
+/* ===== TICKETS TOTAL ===== */
+function updateTicketsTotal() {
+  const tickets = cfg.tickets || 4;
+  const nuits = cfg.nuits || 2;
+  const ticketPrice = 129;
+  const ticketTotal = tickets * ticketPrice;
+  document.getElementById('val-tickets').textContent = tickets + ' billet' + (tickets > 1 ? 's' : '');
+  document.getElementById('tickets-price-total').innerHTML = tickets + ' × ' + ticketPrice + ' € = <strong>' + ticketTotal + ' €</strong>';
+  if (fastPassEnabled) {
+    const fpTotal = tickets * nuits * 15;
+    document.getElementById('fp-price-total').textContent = tickets + ' pers. × ' + nuits + 'j. × 15 € = ' + fpTotal + ' €';
+  }
+}
+
+/* ===== SLIDER UPDATE ===== */
+function updateSlider(key, rawVal) {
+  const val = parseInt(rawVal);
+  cfg[key] = val;
+  adjustmentCount++;
+
+  // Update fill bar
+  const input = document.getElementById('slider-' + key);
+  const fill = document.getElementById('fill-' + key);
+  if (input) {
+    const min = parseInt(input.min), max = parseInt(input.max);
+    const pct = ((val - min) / (max - min)) * 100;
+    if (fill) fill.style.width = pct + '%';
+  }
+
+  // Update displayed value
+  if (key === 'nuits') document.getElementById('val-nuits').textContent = val;
+  if (key === 'visiteurs') document.getElementById('val-visiteurs').textContent = VISITEURS_MAP[val].label;
+  if (key === 'parcs') document.getElementById('val-parcs').textContent = val + (val === 1 ? ' parc' : ' parcs');
+  if (key === 'budget') document.getElementById('val-budget').textContent = BUDGET_LABEL[val];
+  if (key === 'tickets') updateTicketsTotal();
+
+  // Summary
+  document.getElementById('sum-nuits').textContent = val + ' nuit' + (val > 1 ? 's' : '');
+  if (key === 'visiteurs') document.getElementById('sum-visiteurs').textContent = VISITEURS_MAP[val].adults + ' adultes + ' + VISITEURS_MAP[val].children + ' enfants';
+  const budgetMax = BUDGET_MAP[cfg.budget];
+  document.getElementById('sum-budget').textContent = '≤ ' + (budgetMax < 9999 ? (budgetMax * cfg.nuits) + ' €' : 'illimité');
+
+  // Recalc fast pass if nuits changed
+  if (key === 'nuits' && fastPassEnabled) setFastPass(true);
+
+  renderResults();
+  addDCSignal(key, val);
+}
+
+/* ===== RENDER RESULTS ===== */
+function renderResults() {
+  const budgetMax = BUDGET_MAP[cfg.budget];
+  const visitorCount = VISITEURS_MAP[cfg.visiteurs]?.total || 4;
+
+  const scored = HOTELS.map(h => {
+    let score = 0;
+    // Budget match
+    if (h.priceBase <= budgetMax) score += 40;
+    else if (h.priceBase <= budgetMax * 1.2) score += 20;
+    // Capacity
+    if (h.maxVisiteurs >= visitorCount) score += 20;
+    // Distance (closer = better) — proximity to parcs
+    if (h.distMin === 0) score += 20;
+    else if (h.distMin <= 10) score += 15;
+    else if (h.distMin <= 15) score += 10;
+    else score += 5;
+    // Stars vs budget expectation
+    const budgetTier = cfg.budget;
+    if (budgetTier <= 2 && h.stars <= 2) score += 10;
+    if (budgetTier >= 4 && h.stars >= 4) score += 10;
+    if (budgetTier >= 6 && h.stars === 5) score += 10;
+    // Parcs
+    if (h.parcsIncl >= cfg.parcs) score += 10;
+
+    return { ...h, score, visible: h.priceBase <= budgetMax && h.maxVisiteurs >= visitorCount };
+  }).sort((a, b) => b.score - a.score);
+
+  const visible = scored.filter(h => h.visible);
+  const count = visible.length;
+
+  document.getElementById('badge-results').textContent = count + ' hôtel' + (count !== 1 ? 's' : '');
+  document.getElementById('results-count').innerHTML = `<strong>${count}</strong> hôtel${count !== 1 ? 's' : ''} corresponde${count !== 1 ? 'nt' : ''} à vos critères`;
+
+  const container = document.getElementById('results-list');
+  if (count === 0) {
+    container.innerHTML = `<div class="cfg-empty"><div class="cfg-empty__icon">🏰</div><div class="cfg-empty__title">Aucun hôtel pour ces critères</div><div class="cfg-empty__text">Essayez d'augmenter votre budget ou de réduire le nombre de visiteurs.</div></div>`;
+    return;
+  }
+
+  container.innerHTML = '';
+  visible.forEach((h, i) => {
+    const isTop = i === 0;
+    const displayPrice = h.promo ? Math.round(h.priceBase * 0.9) : h.priceBase;
+    const totalEstim = displayPrice * cfg.nuits;
+
+    const card = document.createElement('div');
+    card.className = 'res-card' + (isTop ? ' res-card--top' : (h.score >= 60 ? ' res-card--match' : ''));
+    card.innerHTML = `
+      <div class="res-card__img">
+        <img src="${h.img}" alt="${h.name}" onerror="this.src='${h.imgFallback}'">
+        ${isTop ? '<div class="res-card__badge badge-top">★ Meilleure correspondance</div>' : ''}
+        ${h.promo && !isTop ? `<div class="res-card__badge badge-promo">${h.promo}</div>` : ''}
+        ${isTop && h.promo ? '<div class="res-card__badge badge-promo" style="top:36px;">' + h.promo + '</div>' : ''}
+      </div>
+      <div class="res-card__body">
+        <div class="res-card__info">
+          <div class="res-card__stars">${h.starsLabel}</div>
+          <div class="res-card__title">${h.name}</div>
+          <div class="res-card__loc">📍 ${h.distLabel}</div>
+          <div class="res-card__tags">
+            ${h.tags.map((t, ti) => `<span class="res-tag res-tag--${h.tagClasses[ti] || 'blue'}">${t}</span>`).join('')}
+          </div>
+          <div class="res-card__match-score">
+            Correspondance :
+            <div class="match-bar"><div class="match-bar__fill" style="width:${h.score}%"></div></div>
+            <strong>${h.score}%</strong>
+          </div>
+        </div>
+        <div class="res-card__pricing">
+          <div class="res-card__dist">⏱ ${h.distMin === 0 ? 'Direct' : h.distMin + ' min.'}</div>
+          ${h.promo ? `<div class="res-card__old">${h.priceBase} €/nuit</div><div class="res-card__discount">${h.promo} appliqué</div>` : ''}
+          <div class="res-card__price">${displayPrice} €</div>
+          <div class="res-card__per">/ nuit · famille</div>
+          <div style="font-size:12px;color:#555;margin-bottom:12px;">≈ <strong>${totalEstim} €</strong> pour ${cfg.nuits} nuit${cfg.nuits > 1 ? 's' : ''}</div>
+          <a href="${h.id === 'marvel' ? 'hotel-marvel.html' : 'hotels.html'}" class="${isTop ? 'btn-res' : 'btn-res-outline'}" style="display:block;">Réserver l'hôtel →</a>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  // Update DC top hotel
+  if (visible[0]) {
+    document.getElementById('dc-top-hotel').textContent = visible[0].name.split('—')[0].trim().replace(/Disney'?s?\s*/i, '').trim();
+  }
+}
+
+/* ===== DC PANEL ===== */
+function toggleDCPanel() {
+  dcOpen = !dcOpen;
+  document.getElementById('dc-panel').classList.toggle('open', dcOpen);
+}
+
+function addDCSignal(key, val) {
+  document.getElementById('dc-adjustments').textContent = adjustmentCount;
+  const list = document.getElementById('dc-signal-list');
+  if (!list) return;
+  const labels = { nuits: `Durée → ${val} nuit${val > 1 ? 's' : ''}`, visiteurs: `Visiteurs → ${VISITEURS_MAP[val]?.label}`, parcs: `Parcs → ${val}`, budget: `Budget → ${BUDGET_LABEL[val]}` };
+  const sig = document.createElement('div');
+  sig.className = 'dc-signal';
+  sig.textContent = '⚡ ' + (labels[key] || key);
+  list.insertBefore(sig, list.firstChild);
+  while (list.children.length > 5) list.removeChild(list.lastChild);
+}
+
+/* ===== RESET ===== */
+function resetSliders() {
+  [['nuits', 2, 33.3], ['visiteurs', 2, 33.3], ['parcs', 1, 0], ['budget', 4, 57.1]].forEach(([k, v, pct]) => {
+    document.getElementById('slider-' + k).value = v;
+    const fill = document.getElementById('fill-' + k);
+    if (fill) fill.style.width = pct + '%';
+    cfg[k] = v;
+  });
+  document.getElementById('val-nuits').textContent = '2';
+  document.getElementById('val-visiteurs').textContent = '2A + 2E';
+  document.getElementById('val-parcs').textContent = '1 parc';
+  document.getElementById('val-budget').textContent = '600 €';
+  renderResults();
+}
+
+/* ===== CHAT ===== */
+let chatOpened = false;
+function toggleChat() {
+  const win = document.getElementById('chat-window');
+  if (!chatOpened) {
+    chatOpened = true;
+    document.querySelector('.chat-badge').style.display = 'none';
+    initChat();
+  }
+  win.style.display = win.style.display === 'none' || !win.style.display ? 'flex' : 'none';
+  win.style.flexDirection = 'column';
+}
+
+function initChat() {
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML = '';
+  addMsg('bot', `🎯 Je vois que vous cherchez <strong>l\'hôtel le plus proche et le moins cher</strong> pour votre famille !<br><br>Jouez avec les curseurs — je mets tout à jour en temps réel. Avec <strong>1 nuit, 2 parcs et un budget autour de 500 €</strong>, regardez ce qui se passe avec le Marvel Hotel... 👀`);
+  setTimeout(() => addFollowups(['Montrer le Marvel Hotel', 'Ajouter la coupe-file', 'Coupe-file attractions', 'Mettre au panier']), 400);
+}
+
+function addMsg(role, html) {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = `chat-msg chat-msg--${role}`;
+  div.innerHTML = role === 'bot'
+    ? `<div class="chat-msg__bubble">${html}</div>`
+    : `<div class="chat-msg__bubble">${html}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addFollowups(qs) {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'chat-followup';
+  qs.forEach(q => {
+    const btn = document.createElement('button');
+    btn.className = 'chat-followup__btn';
+    btn.textContent = q;
+    btn.onclick = () => {
+      div.remove();
+      addMsg('user', q);
+      handleCfgChat(q);
+    };
+    div.appendChild(btn);
+  });
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function handleCfgChat(q) {
+  setTimeout(() => {
+    if (/piscine/i.test(q)) {
+      addMsg('bot', `🏊 Bonne nouvelle ! Le <strong>Disney Hotel New York — The Art of Marvel</strong> dispose bien d'une piscine intérieure chauffée — idéale même en décembre.<br><br>Je vous emmène directement sur la page de l'hôtel pour voir les photos et disponibilités !`);
+      setTimeout(function() {
+        sessionStorage.setItem('woody_open', '1');
+        sessionStorage.setItem('woody_msg', '🏊 Le Disney Hotel New York dispose d\'une belle piscine intérieure chauffée — parfaite même en décembre ! Voici toutes les infos et disponibilités.');
+        window.location.href = 'hotel-marvel.html';
+      }, 2000);
+    } else if (/marvel|1 nuit|proche/i.test(q)) {
+      // Set sliders to Marvel-optimal config
+      document.getElementById('slider-nuits').value = 1;
+      document.getElementById('slider-visiteurs').value = 2;
+      document.getElementById('slider-parcs').value = 2;
+      document.getElementById('slider-budget').value = 4;
+      updateSlider('nuits', 1);
+      updateSlider('visiteurs', 2);
+      updateSlider('parcs', 2);
+      updateSlider('budget', 4);
+      addMsg('bot', `✅ Voilà ! Avec <strong>1 nuit · 2 parcs · budget 600 €</strong>, le <strong>Disney Hotel New York Marvel</strong> arrive en tête — <strong>494 €</strong> avec votre réduction -10%, cadeau de bienvenue inclus et coupe-file disponible.`);
+      setTimeout(() => addFollowups(['Ajouter au panier', 'Voir le détail', 'Comparer 2 nuits']), 400);
+    } else if (/panier|réserver|ajouter/i.test(q)) {
+      addMsg('bot', `🛒 Parfait ! Je vous envoie vers le récapitulatif de réservation avec l'hôtel Marvel sélectionné...`);
+      setTimeout(() => { window.location.href = 'cart.html'; }, 1500);
+    } else if (/coupe.?fil\b/i.test(q) && !/attractions/i.test(q)) {
+      addMsg('bot', `⚡ La coupe-file est <strong>disponible en option</strong> au Marvel Hotel — 2 attractions/jour par personne. Je vous l\'ajoute dans le panier ?`);
+      setTimeout(() => addFollowups(['Oui, avec coupe-file', 'Non, sans coupe-file']), 400);
+    } else if (/coupe.?fil.*attractions|attractions.*coupe.?fil/i.test(q)) {
+      addMsg('bot', `⚡ Parfait ! Je vous emmène sur la page coupe-file — je reste avec vous pour en profiter au mieux !`);
+      setTimeout(function() {
+        sessionStorage.setItem('woody_open', '1');
+        sessionStorage.setItem('woody_msg', '⚡ Profitez des coupe-files — vous gagnerez du temps et on vous propose une réduction exclusive ! Je reste avec vous.');
+        window.location.href = 'coupe-file.html';
+      }, 1000);
+    } else if (/new york|hotel/i.test(q)) {
+      addMsg('bot', `🏰 Je vous emmène directement sur la page du <strong>Disney Hotel New York — The Art of Marvel</strong> pour voir toutes les infos et disponibilités !`);
+      setTimeout(function() {
+        sessionStorage.setItem('woody_open', '1');
+        sessionStorage.setItem('woody_msg', '🏰 Voici le Disney Hotel New York — The Art of Marvel ! Toutes les infos, photos et disponibilités pour votre séjour.');
+        window.location.href = 'hotel-marvel.html';
+      }, 1500);
+    } else {
+      addMsg('bot', `🤠 Utilisez les curseurs pour affiner vos critères — les résultats se mettent à jour instantanément. Besoin d\'aide ?`);
+      setTimeout(() => addFollowups(['Marvel Hotel 1 nuit', 'Piscine hôtel NY ?', 'Coupe-file attractions', 'Aller au panier']), 400);
+    }
+  }, 700);
+}
+
+function sendChatMessage() {
+  const input = document.getElementById('chat-input');
+  if (!input.value.trim()) return;
+  const text = input.value.trim();
+  input.value = '';
+  const fup = document.querySelector('.chat-followup');
+  if (fup) fup.remove();
+  addMsg('user', text);
+  handleCfgChat(text);
+}
+
+/* ===== INIT ===== */
+(function init() {
+  // Restore Sophie profile if known
+  const sophieKnown = sessionStorage.getItem('dlp_sophie_known') === '1';
+  if (sophieKnown) {
+    const pill = document.getElementById('perso-pill');
+    const name = document.getElementById('perso-name');
+    if (pill) pill.style.display = 'flex';
+    if (name) name.textContent = 'Sélectionné pour Sophie';
+    document.getElementById('dc-status-label').textContent = 'Profil identifié — Sophie Martin';
+  }
+
+  // Render initial results
+  renderResults();
+
+  // Auto-open Woody: immediately if navigated from chat, else after 2s
+  if (sessionStorage.getItem('woody_open') === '1') {
+    sessionStorage.removeItem('woody_open');
+    const msg = sessionStorage.getItem('woody_msg') || '';
+    sessionStorage.removeItem('woody_msg');
+    setTimeout(function() {
+      if (!chatOpened) {
+        chatOpened = true;
+        document.querySelector('.chat-badge').style.display = 'none';
+        initChat();
+      }
+      const win = document.getElementById('chat-window');
+      if (win) { win.style.display = 'flex'; win.style.flexDirection = 'column'; }
+      if (msg) setTimeout(function() { addMsg('bot', msg); }, 600);
+    }, 300);
+  } else {
+    setTimeout(() => { toggleChat(); }, 2000);
+  }
+})();
+</script>
+</body>
+</html>
