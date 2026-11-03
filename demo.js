@@ -78,8 +78,9 @@ function switchTab(tab) {
     const heroCta = document.getElementById('hero-cta');
     if (heroImg) heroImg.src = 'assets/hero-noel.jpg';
     if (persoBadge) persoBadge.style.display = 'inline-flex';
-    if (heroTitle) heroTitle.innerHTML = 'Vous cherchez un hôtel&nbsp;?';
-    if (heroCta) { heroCta.textContent = 'Voir les offres hôtels'; heroCta.href = 'hotels.html'; }
+    if (heroTitle) heroTitle.innerHTML = 'Vous cherchez un hôtel&nbsp;?<br><span style="font-size:0.6em;font-weight:500;opacity:0.9">Poursuivez votre recherche</span>';
+    const heroBtns = document.getElementById('hero-btns-wrap');
+    if (heroBtns) heroBtns.innerHTML = '<a href="hotels.html" class="btn-hero">Voir les hôtels</a>';
     addDCSignal('Hero personnalisé · visite hôtels détectée');
     updateDCInterest('Hébergement famille');
     showHotelRecos();
